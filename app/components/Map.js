@@ -23,7 +23,7 @@ export default class Main extends React.Component {
       <View style={{ flex: 1 }}>
         <View
           style={{
-            backgroundColor: 'green',
+            backgroundColor: 'gray',
             height: 100,
             justifyContent: 'center',
             alignItems: 'center'
