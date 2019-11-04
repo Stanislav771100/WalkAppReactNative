@@ -6,16 +6,17 @@
  * @flow
  */
 
-import React from 'react';
 
+import React, { Component } from 'react';
 import Routes from './services/Routes';
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <Routes />
-    </>
-  );
-};
-
-export default App;
+export default class App extends Component {
+  render() {
+    console.log('fff')
+    return (
+      <>
+        <Routes />
+      </>
+    );
+  }
+}

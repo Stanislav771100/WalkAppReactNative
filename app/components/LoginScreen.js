@@ -25,9 +25,7 @@ export default class LoginScreen extends Component {
       password: ''
     };
   }
-  componentDidMount() {
-   
-  }
+  componentDidMount() {}
   singIn = () => {
     console.log('d');
     API.postLogin({
