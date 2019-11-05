@@ -1,23 +1,17 @@
-import { ADD_PLACE } from '../actions/types'
+import { ADD_API } from '../actions/types';
 
 const initialState = {
-  placeName: '',
-  places: []
-}
+  api: ''
+};
 
 const placeReducer = (state = initialState, action) => {
-    console.log(state.places)
+  console.log('Redux', state);
   switch (action.type) {
-    case ADD_PLACE:
-      return {
-        ...state,
-        places: state.places.concat({
-          value: action.payload
-        })
-      }
+    case ADD_API:
+      return { ...state, api: action.payload };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default placeReducer
+export default placeReducer;

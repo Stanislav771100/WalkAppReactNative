@@ -1,9 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { Text, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import API from '../services/api';
-
 import {
   StyleSheet,
   ScrollView,
@@ -11,10 +10,10 @@ import {
   TextInput,
   ImageBackground
 } from 'react-native';
-// import { connect } from 'react-redux';
-// import { addLogin, addPassword } from '../services/Root/actions/place';
+import { connect } from 'react-redux';
+import { addApi } from '../services/Root/actions/api';
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,9 +21,11 @@ export default class LoginScreen extends Component {
       issues: [],
       user: '',
       login: '',
-      password: ''
+      password: '',
+      api: ''
     };
   }
+
   componentDidMount() {}
   singIn = () => {
     console.log('d');
@@ -33,17 +34,23 @@ export default class LoginScreen extends Component {
       password: this.state.password
     })
       .then(response => {
-        console.log(response);
+        this.setState({
+          api: response.data.user.apiKey
+        });
+        let api = this.state.api;
+        this.props.addApi(api);
       })
       .catch(error => {
         console.dir(error);
       });
+
   };
 
   render() {
     const onPressNext = () => {
       Actions.Registration();
     };
+
     return (
       <View style={styles.main}>
         <ImageBackground
@@ -130,25 +137,19 @@ const styles = StyleSheet.create({
   }
 });
 
-// const mapStateToProps = state => {
-//   return {
-//     login: state.login.login,
-//     password: state.password.password
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     add: name => {
-//       dispatch(addLogin(name));
-//     },
-//     delete: index => {
-//       dispatch(addPassword(index));
-//     }
-//   };
-// };
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(LoginScreen);
+const mapStateToProps = state => {
+  return {
+    api: state.api
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    add: name => {
+      dispatch(addApi(name));
+    }
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginScreen);

@@ -1,9 +1,4 @@
-import {
-  combineReducers,
-  createStore,
-  applyMiddleware,
-  compose
-} from 'redux';
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import Navigation from './Navigation';
 
 const navReducer = (state, action) => {
