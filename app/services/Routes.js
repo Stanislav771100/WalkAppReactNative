@@ -5,6 +5,7 @@ import LoginScreen from '../components/LoginScreen';
 import Registration from '../components/Registration';
 import MainContainer from '../components/MainContainer';
 import { Router, Scene } from 'react-native-router-flux';
+import LoginScreenContainer from '../components/LoginScreenContainer';
 export default class Routes extends Component {
   constructor(props) {
     super(props);
@@ -19,9 +20,14 @@ export default class Routes extends Component {
         titleStyle={{ color: '#FFF', fontSize: 22 }}
         sceneStyle={{ color: 'FFF' }}>
         <Scene key="root">
-          <Scene key="LoginScreen" component={LoginScreen} title="Login" />
+          <Scene
+            key="LoginScreenContainer"
+            initial={true}
+            component={LoginScreenContainer}
+            title="Login"
+          />
           <Scene key="Registration" component={Registration} />
-          <Scene key="MainContainer" component={MainContainer} initial={true} />
+          <Scene key="MainContainer" component={MainContainer} />
         </Scene>
       </Router>
     );

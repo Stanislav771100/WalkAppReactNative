@@ -12,7 +12,7 @@ import Routes from './services/Routes';
 
 export default class App extends Component {
   render() {
-    console.log('fff')
+    console.log('fff');
     return (
       <>
         <Routes />
