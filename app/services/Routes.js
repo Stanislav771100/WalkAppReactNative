@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { Container, Header, Tab, Tabs, TabHeading, Footer } from 'native-base';
 import { StyleSheet } from 'react-native';
 import LoginScreen from '../components/LoginScreen';
@@ -6,12 +5,22 @@ import Registration from '../components/Registration';
 import MainContainer from '../components/MainContainer';
 import { Router, Scene } from 'react-native-router-flux';
 import LoginScreenContainer from '../components/LoginScreenContainer';
-export default class Routes extends Component {
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+class Routes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      disabledTab: true
+      disabledTab: true,
+      redirect: false
     };
+  }
+  componentDidMount() {
+    if (this.props.api.api !== '') {
+      console.log('woegbfiqe', this.props.api);
+    } else {
+      console.log('false');
+    }
   }
   render() {
     return (
@@ -22,14 +31,20 @@ export default class Routes extends Component {
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"
-            initial={true}
+            
             component={LoginScreenContainer}
             title="Login"
           />
           <Scene key="Registration" component={Registration} />
-          <Scene key="MainContainer" component={MainContainer} />
+          <Scene key="MainContainer" component={MainContainer} initial />
         </Scene>
       </Router>
     );
   }
 }
+function mapStateToProps(state) {
+  return {
+    api: state
+  };
+}
+export default connect(mapStateToProps)(Routes);
