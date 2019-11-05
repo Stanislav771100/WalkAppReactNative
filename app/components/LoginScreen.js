@@ -34,6 +34,7 @@ class LoginScreen extends Component {
       password: this.state.password
     })
       .then(response => {
+        console.log(response);
         this.setState({
           api: response.data.user.apiKey
         });
