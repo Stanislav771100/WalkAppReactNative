@@ -1,5 +1,5 @@
 import axios from 'axios';
-axios.defaults.baseURL = 'http://10.0.4.20:3006';
+axios.defaults.baseURL = 'http://localhost:3006';
 export function getProjects() {
   return axios.get('/login.json', {
     headers: {
@@ -10,7 +10,7 @@ export function getProjects() {
 
 class API {
   static postLogin(data) {
-    console.log('ddf');
+
     return axios({
       method: 'post',
       url: '/login',
@@ -22,7 +22,19 @@ class API {
     });
   }
   static createUser(data) {
-    console.log('ddf');
+
+    return axios({
+      method: 'post',
+      url: '/users',
+      data: {
+        user: data
+      }
+    }).catch(error => {
+      console.dir(error);
+    });
+  }
+  static getUser(data) {
+
     return axios({
       method: 'post',
       url: '/users',
@@ -34,4 +46,6 @@ class API {
     });
   }
 }
+
+
 export default API;

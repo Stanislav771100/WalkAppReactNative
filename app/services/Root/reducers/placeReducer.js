@@ -1,14 +1,19 @@
-import { ADD_API } from '../actions/types';
+import { USER_CHANGE } from '../actions/types';
+import update from 'immutability-helper';
 
 const initialState = {
-  api: ''
+  data: {}
 };
 
 const placeReducer = (state = initialState, action) => {
   console.log('Redux', state);
+  console.log('Redux', action, action.type);
+
   switch (action.type) {
-    case ADD_API:
-      return { ...state, api: action.payload };
+    case USER_CHANGE:
+      return update(state, {
+        [action.state.prop]: { $set: action.state.value }
+      });
     default:
       return state;
   }

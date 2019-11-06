@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -7,33 +7,33 @@ import {
   ImageBackground,
   Text
 } from 'react-native';
-
+import API from '../services/api';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 // import LoginScreen from '../Containers/LoginScreen'
 import LoginScreen from './LoginScreen';
 import Registration from './Registration';
 import { View } from 'native-base';
-import { connect } from 'react-redux';
 // import Main from './Main'
 // import Screen2 from './Screen2';
 // import Screen3 from './Screen3';
-
- class Profile extends React.Component {
+import { connect } from 'react-redux';
+class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      email: '',
-      lastName: ''
-    
+      projects: [],
+      issues: [],
+      user: '',
+      login: '',
+      password: '',
+      api: ''
     };
   }
-  componentDidMount(){
 
-  
-  }
   render() {
+    const { firstName, lastName, email } = this.props.user;
+    console.log(this.props, 'Props in Profile');
     return (
       <View style={styles.main}>
         <ImageBackground
@@ -42,9 +42,9 @@ import { connect } from 'react-redux';
           <View style={styles.content}>
             <View style={styles.image} />
             <View style={styles.description}>
-              <Text style={styles.firstName}>fwefwef</Text>
-              <Text style={styles.lastName}>fewfwe</Text>
-              <Text style={styles.email}>fwef@!fefwe</Text>
+              <Text style={styles.firstName}>{firstName}</Text>
+              <Text style={styles.lastName}>{lastName}</Text>
+              <Text style={styles.email}>{email}</Text>
             </View>
           </View>
         </ImageBackground>
@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     height: 150,
     borderColor: '#AAA',
     borderWidth: 1
-
   },
   firstName: {
     fontSize: 22,
@@ -91,9 +90,11 @@ const styles = StyleSheet.create({
     fontWeight: '800'
   }
 });
-function mapStateToProps(state) {
+const mapStateToProps = state => {
+  console.log('statestatestate', state.user.data)
   return {
-    api: state
+    user: state.user.data
   };
-}
+};
+
 export default connect(mapStateToProps)(Profile);
