@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Dimensions, Text, View } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-
+import MapViewDirections from 'react-native-maps-directions';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -19,6 +19,9 @@ export default class Main extends React.Component {
   }
 
   render() {
+    const origin = { latitude: 37.3318456, longitude: -122.0296002 };
+    const destination = { latitude: 37.771707, longitude: -122.4053769 };
+    const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -38,8 +41,13 @@ export default class Main extends React.Component {
               longitude: LONGITUDE,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA
-            }}
-          />
+            }}>
+            <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={GOOGLE_MAPS_APIKEY}
+            />
+          </MapView>
         </View>
       </View>
     );

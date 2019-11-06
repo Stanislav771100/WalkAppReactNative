@@ -17,12 +17,10 @@ class Routes extends Component {
   }
   componentDidMount() {
     if (this.props.user && this.props.user.api) {
-      console.log('woegbfiqe', this.props.api.api);
       this.setState({
         redirectToMain: true
-      })
+      });
     } else {
-      console.log('false');
     }
   }
   render() {
@@ -34,7 +32,6 @@ class Routes extends Component {
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"
-            
             component={LoginScreenContainer}
             title="Login"
           />

@@ -3,15 +3,7 @@ import React, { PropTypes, Component } from 'react';
 import { Text, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import API from '../services/api';
-import {
-  StyleSheet,
-  ScrollView,
-  Button,
-  TextInput,
-  ImageBackground
-} from 'react-native';
-import { connect } from 'react-redux';
-import { addApi } from '../services/Root/actions/api';
+import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -28,27 +20,12 @@ export default class LoginScreen extends Component {
       apiKey: ''
     };
   }
-
-  // componentDidUpdate(nextProps) {
-  //   if (this.props.user.api) {
-  //     Actions.MainContainer();
-  //     console.log(this.props.user, 'RedirectToMain');
-  //   }
-  // }
-
   singIn = () => {
-    console.log('d');
-    if (this.props.user.api) {
-      Actions.MainContainer();
-      console.log(this.props.user, 'RedirectToMain');
-    }
     API.postLogin({
       email: this.state.login,
       password: this.state.password
     })
-    
       .then(response => {
-        console.log(response);
         this.setState({
           api: response.data.user.apiKey,
           firstName: response.data.user.firstName,
@@ -65,9 +42,7 @@ export default class LoginScreen extends Component {
           { api, firstName, lastName, email },
           'user'
         );
-
-        // this.props.addApi(api, firstName, lastName, email);
-
+        Actions.MainContainer();
       })
       .catch(error => {
         console.dir(error);
@@ -75,7 +50,6 @@ export default class LoginScreen extends Component {
   };
 
   render() {
-
     const onPressNext = () => {
       Actions.Registration();
     };
@@ -165,20 +139,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
-
-// const mapStateToProps = state => {
-//   return {
-//     api: state.api
-//   };
-// };
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     add: name => {
-//       dispatch(addApi(name));
-//     }
-//   };
-// };
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(LoginScreen);

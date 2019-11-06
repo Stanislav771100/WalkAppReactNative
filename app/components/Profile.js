@@ -1,22 +1,6 @@
 import React, { PropTypes, Component } from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  Button,
-  TextInput,
-  ImageBackground,
-  Text
-} from 'react-native';
-import API from '../services/api';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-// import LoginScreen from '../Containers/LoginScreen'
-import LoginScreen from './LoginScreen';
-import Registration from './Registration';
+import { StyleSheet, ImageBackground, Text } from 'react-native';
 import { View } from 'native-base';
-// import Main from './Main'
-// import Screen2 from './Screen2';
-// import Screen3 from './Screen3';
 import { connect } from 'react-redux';
 class Profile extends React.Component {
   constructor(props) {
@@ -91,7 +75,6 @@ const styles = StyleSheet.create({
   }
 });
 const mapStateToProps = state => {
-  console.log('statestatestate', state.user.data)
   return {
     user: state.user.data
   };

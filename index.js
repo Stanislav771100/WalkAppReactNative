@@ -8,7 +8,7 @@ import { AppRegistry } from 'react-native';
 import App from './app/App';
 import { name as appName } from './app.json';
 
-import configureStore from './app/services/Root/store';
+import configureStore from './app/actions/store';
 
 const store = configureStore();
 

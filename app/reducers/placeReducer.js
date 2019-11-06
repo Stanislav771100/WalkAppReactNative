@@ -6,8 +6,6 @@ const initialState = {
 };
 
 const placeReducer = (state = initialState, action) => {
-  console.log('Redux', state);
-  console.log('Redux', action, action.type);
 
   switch (action.type) {
     case USER_CHANGE:

@@ -10,7 +10,6 @@ export function getProjects() {
 
 class API {
   static postLogin(data) {
-
     return axios({
       method: 'post',
       url: '/login',
@@ -22,7 +21,6 @@ class API {
     });
   }
   static createUser(data) {
-
     return axios({
       method: 'post',
       url: '/users',
@@ -34,7 +32,6 @@ class API {
     });
   }
   static getUser(data) {
-
     return axios({
       method: 'post',
       url: '/users',
@@ -46,6 +43,5 @@ class API {
     });
   }
 }
-
 
 export default API;
