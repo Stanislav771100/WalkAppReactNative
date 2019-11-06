@@ -12,12 +12,15 @@ class Routes extends Component {
     super(props);
     this.state = {
       disabledTab: true,
-      redirect: false
+      redirectToMain: false
     };
   }
   componentDidMount() {
-    if (this.props.api.api !== '') {
-      console.log('woegbfiqe', this.props.api);
+    if (this.props.user && this.props.user.api) {
+      console.log('woegbfiqe', this.props.api.api);
+      this.setState({
+        redirectToMain: true
+      })
     } else {
       console.log('false');
     }
@@ -36,7 +39,11 @@ class Routes extends Component {
             title="Login"
           />
           <Scene key="Registration" component={Registration} />
-          <Scene key="MainContainer" component={MainContainer} initial />
+          <Scene
+            key="MainContainer"
+            component={MainContainer}
+            initial={this.state.redirectToMain}
+          />
         </Scene>
       </Router>
     );

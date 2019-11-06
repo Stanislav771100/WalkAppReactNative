@@ -1,1 +1,1 @@
-export const ADD_API = 'ADD_API'
+export const USER_CHANGE = 'USERCHANGE_STATE_PROP';
