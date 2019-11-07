@@ -44,9 +44,7 @@ export default class LoginScreen extends Component {
         );
         Actions.MainContainer();
       })
-      .catch(error => {
-        console.dir(error);
-      });
+      .catch(error => {});
   };
 
   render() {
