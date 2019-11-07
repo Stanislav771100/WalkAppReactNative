@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Dimensions, Text, View } from 'react-native';
-
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const { width, height } = Dimensions.get('window');
@@ -10,6 +9,7 @@ const LONGITUDE = 32.060033;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
+import Polyline from '@mapbox/polyline';
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -68,7 +68,11 @@ export default class Main extends React.Component {
                 coordinate={coordinate}
               />
             ))}
-
+            <Polyline
+              coordinates={this.state.coordinates}
+              strokeWidth={2}
+              strokeColor="red"
+            />
           </MapView>
         </View>
       </View>

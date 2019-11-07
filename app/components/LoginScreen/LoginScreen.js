@@ -42,7 +42,6 @@ export default class LoginScreen extends Component {
           { api, firstName, lastName, email },
           'user'
         );
-        console.log(this.props);
         Actions.MainContainer();
       })
       .catch(error => {
