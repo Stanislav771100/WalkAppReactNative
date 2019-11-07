@@ -2,7 +2,7 @@
 import React, { PropTypes, Component } from 'react';
 import { Text, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import API from '../services/api';
+import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -42,6 +42,7 @@ export default class LoginScreen extends Component {
           { api, firstName, lastName, email },
           'user'
         );
+        console.log(this.props);
         Actions.MainContainer();
       })
       .catch(error => {

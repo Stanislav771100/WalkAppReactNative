@@ -17,7 +17,6 @@ class Profile extends React.Component {
 
   render() {
     const { firstName, lastName, email } = this.props.user;
-    console.log(this.props, 'Props in Profile');
     return (
       <View style={styles.main}>
         <ImageBackground

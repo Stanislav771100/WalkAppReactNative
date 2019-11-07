@@ -1,27 +1,45 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Dimensions, Text, View } from 'react-native';
 
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const { width, height } = Dimensions.get('window');
-
 const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
+const LATITUDE = 49.437891;
+const LONGITUDE = 32.060033;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
 
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      coordinates: [
+        {
+          latitude: 49.437891,
+          longitude: 32.060033
+        },
+        {
+          latitude: 49.441298,
+          longitude: 32.064704
+        }
+      ]
+    };
+
+    this.mapView = null;
   }
+  onMapPress = e => {
+    this.setState({
+      coordinates: [...this.state.coordinates, e.nativeEvent.coordinate]
+    });
+  };
 
   render() {
-    const origin = { latitude: 37.3318456, longitude: -122.0296002 };
-    const destination = { latitude: 37.771707, longitude: -122.4053769 };
-    const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
+    const origin = { latitude: 49.437891, longitude: 32.060033 };
+    const destination = { latitude: 49.441298, longitude: 32.064704 };
+
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -41,12 +59,16 @@ export default class Main extends React.Component {
               longitude: LONGITUDE,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA
-            }}>
-            <MapViewDirections
-              origin={origin}
-              destination={destination}
-              apikey={GOOGLE_MAPS_APIKEY}
-            />
+            }}
+            onPress={this.onMapPress}
+            ref={c => (this.mapView = c)}>
+            {this.state.coordinates.map((coordinate, index) => (
+              <MapView.Marker
+                key={`coordinate_${index}`}
+                coordinate={coordinate}
+              />
+            ))}
+
           </MapView>
         </View>
       </View>

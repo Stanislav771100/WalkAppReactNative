@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import { Text, View } from 'native-base';
-import API from '../services/api';
+import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 
 export default class Registration extends Component {

@@ -1,10 +1,10 @@
 import { Container, Header, Tab, Tabs, TabHeading, Footer } from 'native-base';
 import { StyleSheet } from 'react-native';
-import LoginScreen from '../components/LoginScreen';
-import Registration from '../components/Registration';
+import LoginScreen from '../components/LoginScreen/LoginScreen';
+import Registration from '../components/RegistrationScreen/Registration';
 import MainContainer from '../components/MainContainer';
 import { Router, Scene } from 'react-native-router-flux';
-import LoginScreenContainer from '../components/LoginScreenContainer';
+import LoginScreenContainer from '../components/LoginScreen/LoginScreenContainer';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 class Routes extends Component {
@@ -28,7 +28,7 @@ class Routes extends Component {
       <Router
         navigationBarStyle={{ backgroundColor: '#e3c13b', height: 75 }}
         titleStyle={{ color: '#FFF', fontSize: 22 }}
-        sceneStyle={{ color: 'FFF' }}>
+       >
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"
