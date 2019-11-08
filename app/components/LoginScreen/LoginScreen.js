@@ -55,7 +55,7 @@ export default class LoginScreen extends Component {
     return (
       <View style={styles.main}>
         <ImageBackground
-          source={require('../assets/images/314622.jpg')}
+          source={require('../../assets/images/314622.jpg')}
           style={{ width: '100%', height: '100%' }}>
           <View style={styles.content}>
             <TextInput

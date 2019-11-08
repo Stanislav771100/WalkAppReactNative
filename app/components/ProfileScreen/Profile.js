@@ -20,7 +20,7 @@ class Profile extends React.Component {
     return (
       <View style={styles.main}>
         <ImageBackground
-          source={require('../assets/images/giphy.gif')}
+          source={require('../../assets/images/giphy.gif')}
           style={{ width: '100%', height: '100%' }}>
           <View style={styles.content}>
             <View style={styles.image} />
