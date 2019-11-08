@@ -68,7 +68,7 @@ export default class Main extends React.Component {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            backgroundColor: '#AAA',
+            backgroundColor: 'green',
             height: 100,
             justifyContent: 'space-around',
             alignItems: 'center'
@@ -76,7 +76,7 @@ export default class Main extends React.Component {
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={this.onPress}>
               <Image
-                source={require('../../assets/images/trekking.png')}
+                source={require('../../assets/images/sneaker.png')}
                 style={styles.ImageIconStyle}
               />
               <Text style={{ textAlign: 'center', color: '#FFF' }}>Walk</Text>
@@ -85,7 +85,7 @@ export default class Main extends React.Component {
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={this.onPress}>
               <Image
-                source={require('../../assets/images/bicycle.png')}
+                source={require('../../assets/images/bike-of-a-gymnast.png')}
                 style={styles.ImageIconStyle}
               />
               <Text style={{ textAlign: 'center', color: '#FFF' }}>
@@ -96,7 +96,7 @@ export default class Main extends React.Component {
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={this.onPress}>
               <Image
-                source={require('../../assets/images/car.png')}
+                source={require('../../assets/images/steering-wheel.png')}
                 style={styles.ImageIconStyle}
               />
               <Text style={{ textAlign: 'center', color: '#FFF' }}>Car</Text>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: "center"
   },
   button: {
     height: 50,
