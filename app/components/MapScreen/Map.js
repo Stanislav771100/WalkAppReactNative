@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Dimensions, Text, View } from 'react-native';
+import {
+  AppRegistry,
+  StyleSheet,
+  Dimensions,
+  Text,
+  View,
+  TouchableOpacity,
+  Image
+} from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const { width, height } = Dimensions.get('window');
@@ -16,16 +24,7 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
-      coordinates: [
-        {
-          latitude: 49.437891,
-          longitude: 32.060033
-        },
-        {
-          latitude: 49.441298,
-          longitude: 32.064704
-        }
-      ]
+      coordinates: []
     };
 
     this.mapView = null;
@@ -35,21 +34,75 @@ export default class Main extends React.Component {
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate]
     });
   };
-
+  componentDidMount() {
+    // find your origin and destination point coordinates and pass it to our method.
+    // I am using Bursa,TR -> Istanbul,TR for this example
+    this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
+  }
+  async getDirections(startLoc, destinationLoc) {
+    try {
+      let resp = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&mode=${'DRIVING'}&key=AIzaSyByQD8cPv4oAcyCvuvLPIYM5K`
+      );
+      let respJson = await resp.json();
+      let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      let coords = points.map((point, index) => {
+        return {
+          latitude: point[0],
+          longitude: point[1]
+        };
+      });
+      this.setState({ coords: coords });
+      return coords;
+    } catch (error) {
+      return error;
+    }
+  }
   render() {
     const origin = { latitude: 49.437891, longitude: 32.060033 };
     const destination = { latitude: 49.441298, longitude: 32.064704 };
-
+    console.log(this.state.coordinates);
     return (
       <View style={{ flex: 1 }}>
         <View
           style={{
-            backgroundColor: 'gray',
+            display: 'flex',
+            flexDirection: 'row',
+            backgroundColor: '#AAA',
             height: 100,
-            justifyContent: 'center',
+            justifyContent: 'space-around',
             alignItems: 'center'
-          }}
-        />
+          }}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={this.onPress}>
+              <Image
+                source={require('../../assets/images/trekking.png')}
+                style={styles.ImageIconStyle}
+              />
+              <Text style={{ textAlign: 'center', color: '#FFF' }}>Walk</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={this.onPress}>
+              <Image
+                source={require('../../assets/images/bicycle.png')}
+                style={styles.ImageIconStyle}
+              />
+              <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                Bicycle
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={this.onPress}>
+              <Image
+                source={require('../../assets/images/car.png')}
+                style={styles.ImageIconStyle}
+              />
+              <Text style={{ textAlign: 'center', color: '#FFF' }}>Car</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -68,7 +121,8 @@ export default class Main extends React.Component {
                 coordinate={coordinate}
               />
             ))}
-            <Polyline
+            <MapView.Polyline
+              googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
               coordinates={this.state.coordinates}
               strokeWidth={2}
               strokeColor="red"
@@ -85,6 +139,19 @@ Main.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    height: 50,
+    width: 50
+  },
+  ImageIconStyle: {
+    height: 50,
+    width: 50
+  },
   container: {
     ...StyleSheet.absoluteFillObject,
     top: 100,
