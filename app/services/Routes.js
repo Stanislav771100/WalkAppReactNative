@@ -7,6 +7,7 @@ import { Router, Scene } from 'react-native-router-flux';
 import LoginScreenContainer from '../components/LoginScreen/LoginScreenContainer';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import AddRouteScreen from '../components/AddRouteScreen/AddRouteScreen';
 class Routes extends Component {
   constructor(props) {
     super(props);
@@ -27,13 +28,17 @@ class Routes extends Component {
     return (
       <Router
         navigationBarStyle={{ backgroundColor: '#e3c13b', height: 75 }}
-        titleStyle={{ color: '#FFF', fontSize: 22 }}
-       >
+        titleStyle={{ color: '#FFF', fontSize: 22 }}>
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"
             component={LoginScreenContainer}
             title="Login"
+          />
+          <Scene
+            key="AddRouteScreen"
+            component={AddRouteScreen}
+            title="Add Route"
           />
           <Scene key="Registration" component={Registration} />
           <Scene

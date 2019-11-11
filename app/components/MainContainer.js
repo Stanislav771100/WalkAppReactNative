@@ -3,6 +3,7 @@ import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import Main from './MapScreen/Map';
 import Profile from './ProfileScreen/Profile';
+import AddRouteScreen from './AddRouteScreen/AddRouteScreen';
 
 export default class MainContainer extends React.Component {
   render() {
@@ -16,6 +17,9 @@ const AppNavigator = createDrawerNavigator({
   },
   Profile: {
     screen: Profile
+  },
+  AddRoute: {
+    screen: AddRouteScreen
   }
 });
 
