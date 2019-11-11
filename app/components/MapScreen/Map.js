@@ -6,8 +6,10 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image
+  Image,
+  Button
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const { width, height } = Dimensions.get('window');
@@ -24,7 +26,11 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
-      coordinates: []
+      coordinates: [],
+      showAddWalk: false,
+      showAddBicycle: false,
+      showAddCar: false,
+      title: ''
     };
 
     this.mapView = null;
@@ -32,6 +38,24 @@ export default class Main extends React.Component {
   onMapPress = e => {
     this.setState({
       coordinates: [...this.state.coordinates, e.nativeEvent.coordinate]
+    });
+  };
+  showAddWalk = () => {
+    this.setState({
+      showAddWalk: !this.state.showAddWalk,
+      title: 'Walk'
+    });
+  };
+  showAddBicycle = () => {
+    this.setState({
+      showAddBicycle: !this.state.showAddBicycle,
+      title: 'Bicycle'
+    });
+  };
+  showAddCar = () => {
+    this.setState({
+      showAddCar: !this.state.showAddCar,
+      title: 'Car'
     });
   };
   componentDidMount() {
@@ -61,47 +85,55 @@ export default class Main extends React.Component {
   render() {
     const origin = { latitude: 49.437891, longitude: 32.060033 };
     const destination = { latitude: 49.441298, longitude: 32.064704 };
-    console.log(this.state.coordinates);
+    const { showAddBicycle, showAddCar, showAddWalk } = this.state;
+    const onPressNext = () => {
+      Actions.AddRouteScreen({
+        coordinates: this.state.coordinates,
+        title: this.state.title
+      });
+    };
     return (
       <View style={{ flex: 1 }}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            backgroundColor: 'green',
-            height: 100,
-            justifyContent: 'space-around',
-            alignItems: 'center'
-          }}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={this.onPress}>
-              <Image
-                source={require('../../assets/images/sneaker.png')}
-                style={styles.ImageIconStyle}
-              />
-              <Text style={{ textAlign: 'center', color: '#FFF' }}>Walk</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={this.onPress}>
-              <Image
-                source={require('../../assets/images/bike-of-a-gymnast.png')}
-                style={styles.ImageIconStyle}
-              />
-              <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                Bicycle
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={this.onPress}>
-              <Image
-                source={require('../../assets/images/steering-wheel.png')}
-                style={styles.ImageIconStyle}
-              />
-              <Text style={{ textAlign: 'center', color: '#FFF' }}>Car</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.buttonMain}>
+          {showAddBicycle === false && showAddCar === false && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={this.showAddWalk}>
+                <Image
+                  source={require('../../assets/images/sneaker.png')}
+                  style={styles.ImageIconStyle}
+                />
+                <Text style={{ textAlign: 'center', color: '#FFF' }}>Walk</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {showAddWalk === false && showAddCar === false && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={this.showAddBicycle}>
+                <Image
+                  source={require('../../assets/images/bike-of-a-gymnast.png')}
+                  style={styles.ImageIconStyle}
+                />
+                <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                  Bicycle
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {showAddWalk === false && showAddBicycle === false && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={this.showAddCar}>
+                <Image
+                  source={require('../../assets/images/steering-wheel.png')}
+                  style={styles.ImageIconStyle}
+                />
+                <Text style={{ textAlign: 'center', color: '#FFF' }}>Car</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <View style={styles.container}>
           <MapView
@@ -128,6 +160,20 @@ export default class Main extends React.Component {
               strokeColor="red"
             />
           </MapView>
+          {(showAddWalk || showAddBicycle || showAddCar) && (
+            <View style={styles.addRouteButton}>
+              {Platform.OS == 'ios' ? (
+                <Button
+                  onPress={onPressNext}
+                  title="Add Route"
+                  color="#FFF"
+                  heigh="100"
+                />
+              ) : (
+                <Button onPress={onPressNext} title="Add Route" />
+              )}
+            </View>
+          )}
         </View>
       </View>
     );
@@ -139,10 +185,26 @@ Main.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  addRouteButton: {
+    flex: 1,
+    width: '100%',
+    height: 50,
+    position: 'absolute',
+    zIndex: 999,
+    backgroundColor: 'green'
+  },
+  buttonMain: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: 'green',
+    height: 100,
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: "center"
+    alignItems: 'center'
   },
   button: {
     height: 50,
