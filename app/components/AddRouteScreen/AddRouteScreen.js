@@ -7,9 +7,11 @@ import {
   Button
 } from 'react-native';
 import { View } from 'native-base';
+import API from '../../services/api';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-export default class AddRouteScreen extends React.Component {
+
+class AddRouteScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,33 +20,51 @@ export default class AddRouteScreen extends React.Component {
       coordinates: []
     };
   }
-  onPressNext = () => {};
+  addRoute = () => {
+    API.postRoutes(
+      {
+        coordinates: this.props.coordinates,
+        type: this.props.title,
+        title: this.props.title
+      },
+      {
+        'x-api-key': this.props.user.api
+      }
+    ).then(response => {
+      console.log(response);
+    });
+  };
   render() {
-    console.log(this.props.coordinates);
+    console.log(this.props.coordinates, this.props.user.api);
     return (
-      <View style={styles.main}>
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Title"
-          onChangeText={login => this.setState({ login })}
-          value={this.props.title}
-        />
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Description"
-          onChangeText={password => this.setState({ password })}
-          value={this.state.password}
-          secureTextEntry={true}
-        />
+      <ImageBackground
+        source={require('../../assets/images/rental-car-solar-eclipse-HERTZCANCEL0817.jpg')}
+        style={{ width: '100%', height: '100%' }}>
+        <View style={styles.main}>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Title"
+            onChangeText={title => this.setState({ title })}
+            value={this.props.title}
+          />
+          <TextInput
+            style={styles.inputStyleDescription}
+            placeholder="Description"
+            onChangeText={description => this.setState({ description })}
+            value={this.state.description}
+            multiline
+            secureTextEntry={true}
+          />
 
-        <View style={styles.buttonContainerSingUp}>
-          {Platform.OS == 'ios' ? (
-            <Button onPress={this.onPressNext} title="Add Route" color="#FFF" />
-          ) : (
-            <Button onPress={this.onPressNext} title="Add Route" />
-          )}
+          <View style={styles.buttonContainerSingUp}>
+            {Platform.OS == 'ios' ? (
+              <Button onPress={this.addRoute} title="Add Route" color="#FFF" />
+            ) : (
+              <Button onPress={this.addRoute} title="Add Route" />
+            )}
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
@@ -61,6 +81,17 @@ const styles = StyleSheet.create({
       },
       android: {}
     })
+  },
+  inputStyleDescription: {
+    height: 200,
+    width: '80%',
+    borderColor: '#FFF',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    margin: 10,
+    backgroundColor: 'rgba(255,255,255,0.8)'
   },
   buttonContainerSingIn: {
     height: 40,
@@ -87,10 +118,17 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: 'rgba(255,255,255,0.8)'
   },
-  content: {
+  main: {
     height: '80%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   }
 });
+const mapStateToProps = state => {
+  return {
+    user: state.user.data
+  };
+};
+
+export default connect(mapStateToProps)(AddRouteScreen);
