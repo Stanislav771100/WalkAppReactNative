@@ -8,6 +8,7 @@ import LoginScreenContainer from '../components/LoginScreen/LoginScreenContainer
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import AddRouteScreen from '../components/AddRouteScreen/AddRouteScreen';
+import ShowRoutes from '../components/ShowRoutesScreen/ShowRoutes';
 class Routes extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +47,8 @@ class Routes extends Component {
             component={MainContainer}
             initial={this.state.redirectToMain}
           />
+
+          <Scene key="ShowRoutes" component={ShowRoutes} title="ShowRoutes"/>
         </Scene>
       </Router>
     );

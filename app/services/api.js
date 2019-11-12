@@ -33,7 +33,7 @@ class API {
     return axios({
       method: 'post',
       url: '/users',
-      
+
       data: {
         user: data
       }
@@ -47,8 +47,17 @@ class API {
       url: '/walks',
       headers,
       data: {
-        walk:data
+        walk: data
       }
+    }).catch(error => {
+      console.dir(error);
+    });
+  }
+  static getRoutes(headers) {
+    return axios({
+      method: 'post',
+      url: '/walks',
+      headers
     }).catch(error => {
       console.dir(error);
     });
