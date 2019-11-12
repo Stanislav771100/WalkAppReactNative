@@ -16,8 +16,6 @@ class API {
       data: {
         user: data
       }
-    }).catch(error => {
-      console.dir(error);
     });
   }
   static createUser(data) {
