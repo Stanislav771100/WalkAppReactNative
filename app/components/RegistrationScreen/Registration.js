@@ -1,18 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import { Text, View } from 'native-base';
-import { postLogin, getProjects } from '../services/api';
-import { createUser } from '../services/api';
-import API from '../services/api';
-import {
-  StyleSheet,
-  ScrollView,
-  Button,
-  TextInput,
-  ImageBackground
-} from 'react-native';
-// import { connect } from 'react-redux';
-// import { addLogin, addPassword } from '../services/Root/actions/place';
+import API from '../../services/api';
+import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 
 export default class Registration extends Component {
   constructor(props) {
@@ -37,7 +27,6 @@ export default class Registration extends Component {
     if (this.state.password === this.state.checkPassword) {
       this.setState({ checkPasswordCheked: false });
     } else {
-      console.log('false');
     }
   };
   varifyEmail = () => {
@@ -46,7 +35,6 @@ export default class Registration extends Component {
     if (email.match(regexEmail)) {
       this.setState({ emailCheked: false });
     } else {
-      console.log('false');
     }
   };
   varifyPassword = () => {
@@ -55,21 +43,17 @@ export default class Registration extends Component {
     if (password.match(regexPassword)) {
       this.setState({ passwordCheked: false });
     } else {
-      console.log('false');
     }
   };
 
   registration = () => {
-    console.log('d');
     API.createUser({
       email: this.state.email,
       password: this.state.password,
       lastName: this.state.lastname,
       firstName: this.state.firstname
     })
-      .then(response => {
-        console.log(response);
-      })
+      .then(response => {})
       .catch(error => {
         console.dir(error);
       });
@@ -79,7 +63,7 @@ export default class Registration extends Component {
     return (
       <View style={styles.main}>
         <ImageBackground
-          source={require('../assets/images/314622.jpg')}
+          source={require('../../assets/images/314622.jpg')}
           style={{ width: '100%', height: '100%' }}>
           <View style={styles.content}>
             <TextInput
@@ -202,26 +186,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
-
-// const mapStateToProps = state => {
-//   return {
-//     login: state.login.login,
-//     password: state.password.password
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     add: name => {
-//       dispatch(addLogin(name));
-//     },
-//     delete: index => {
-//       dispatch(addPassword(index));
-//     }
-//   };
-// };
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(LoginScreen);
