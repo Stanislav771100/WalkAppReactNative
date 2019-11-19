@@ -30,7 +30,8 @@ export default class Main extends React.Component {
       showAddWalk: false,
       showAddBicycle: false,
       showAddCar: false,
-      title: ''
+      title: '',
+      typeRoute: ''
     };
 
     this.mapView = null;
@@ -43,24 +44,25 @@ export default class Main extends React.Component {
   showAddWalk = () => {
     this.setState({
       showAddWalk: !this.state.showAddWalk,
-      title: 'Walk'
+      title: 'Walk',
+      typeRoute: 'Walk'
     });
   };
   showAddBicycle = () => {
     this.setState({
       showAddBicycle: !this.state.showAddBicycle,
-      title: 'Bicycle'
+      title: 'Bicycle',
+      typeRoute: 'Bicycle'
     });
   };
   showAddCar = () => {
     this.setState({
       showAddCar: !this.state.showAddCar,
-      title: 'Car'
+      title: 'Car',
+      typeRoute: 'Car'
     });
   };
   componentDidMount() {
-    // find your origin and destination point coordinates and pass it to our method.
-    // I am using Bursa,TR -> Istanbul,TR for this example
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
   }
   async getDirections(startLoc, destinationLoc) {
@@ -89,7 +91,8 @@ export default class Main extends React.Component {
     const onPressNext = () => {
       Actions.AddRouteScreen({
         coordinates: this.state.coordinates,
-        title: this.state.title
+        title: this.state.title,
+        typeRoute: this.state.typeRoute
       });
     };
     return (
