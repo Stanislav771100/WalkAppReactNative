@@ -194,12 +194,12 @@ const styles = StyleSheet.create({
     height: 50,
     position: 'absolute',
     zIndex: 999,
-    backgroundColor: 'green'
+    backgroundColor: '#35523e'
   },
   buttonMain: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: 'green',
+    backgroundColor: '#519668',
     height: 100,
     justifyContent: 'space-around',
     alignItems: 'center'

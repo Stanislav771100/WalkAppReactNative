@@ -58,9 +58,18 @@ class API {
       method: 'get',
       url: '/walks',
       headers
-
     }).catch(error => {
       console.dir(error);
+    });
+  }
+  static delete(data, headers) {
+    return axios({
+      method: 'delete',
+      url: '/walks',
+      headers,
+      data: {
+        walk: data
+      }
     });
   }
 }
