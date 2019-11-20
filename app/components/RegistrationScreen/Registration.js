@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 
     ...Platform.select({
       ios: {
-        backgroundColor: '#e3c13b'
+        backgroundColor: '#519668'
       },
       android: {}
     })

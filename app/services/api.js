@@ -16,8 +16,6 @@ class API {
       data: {
         user: data
       }
-    }).catch(error => {
-      console.dir(error);
     });
   }
   static createUser(data) {
@@ -57,11 +55,21 @@ class API {
   }
   static getRoutes(headers) {
     return axios({
-      method: 'post',
+      method: 'get',
       url: '/walks',
       headers
     }).catch(error => {
       console.dir(error);
+    });
+  }
+  static delete(data, headers) {
+    return axios({
+      method: 'delete',
+      url: '/walks',
+      headers,
+      data: {
+        walk: data
+      }
     });
   }
 }

@@ -17,21 +17,22 @@ class AddRouteScreen extends React.Component {
     this.state = {
       title: '',
       description: '',
-      coordinates: []
+      coordinates: [],
+      type: ''
     };
   }
   addRoute = () => {
     API.postRoutes(
       {
         coordinates: this.props.coordinates,
-        type: this.props.title,
-        title: this.props.title
+        type: this.props.typeRoute,
+        title: this.state.description
       },
       {
         'x-api-key': this.props.user.api
       }
     ).then(response => {
-      console.log(response);
+      console.log(response, 'res');
     });
   };
   render() {
@@ -44,8 +45,8 @@ class AddRouteScreen extends React.Component {
           <TextInput
             style={styles.inputStyle}
             placeholder="Title"
-            onChangeText={title => this.setState({ title })}
-            value={this.props.title}
+            onChangeText={type => this.setState({ type })}
+            value={this.props.typeRoute}
           />
           <TextInput
             style={styles.inputStyleDescription}
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     ...Platform.select({
       ios: {
-        backgroundColor: '#c4a500'
+        backgroundColor: '#519668'
       },
       android: {}
     })
