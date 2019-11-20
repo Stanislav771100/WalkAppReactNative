@@ -32,6 +32,7 @@ class ShowRoutes extends React.Component {
     };
   }
   componentDidMount() {
+   
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
     console.log(this.props, 'f');
     API.getRoutes({
@@ -64,6 +65,7 @@ class ShowRoutes extends React.Component {
     }
   }
   render() {
+    console.log(this.props, '1111111');
     const { firstName, lastName, email } = this.props.user;
     const origin = { latitude: 49.437891, longitude: 32.060033 };
     const destination = { latitude: 49.441298, longitude: 32.064704 };
@@ -100,8 +102,8 @@ class ShowRoutes extends React.Component {
                     </MapView>
                   </View>
                   <View style={styles.textContainers}>
-                    <Text>{route.type}</Text>
-                    <Text>{route.title}</Text>
+                    <Text style={styles.typeStyle}>{route.type}</Text>
+                    <Text style={styles.titleStyle}>{route.title}</Text>
                   </View>
                 </View>
               );
@@ -113,70 +115,31 @@ class ShowRoutes extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  containerRoutes: {
-    width: '100%'
+  typeStyle: {
+    fontSize: 20,
+    fontWeight: '600'
+  },
+  titleStyle:{
+   
   },
   textContainers: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '60%',
+    justifyContent: 'center'
   },
   RoutesContainers: {
     display: 'flex',
     flexDirection: 'row',
+    width: '100%',
     marginBottom: 10
   },
   miniMapContainer: {
-    width: 150,
+    width: '40%',
     height: 150
   },
   map: {
     ...StyleSheet.absoluteFillObject
-  },
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    top: 100,
-    justifyContent: 'flex-end',
-    alignItems: 'center'
-  },
-  mapView: {
-    height: 200,
-    width: 200
-  },
-  main: {
-    flex: 1,
-    backgroundColor: '#ffd152',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  content: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  image: {
-    marginTop: 50,
-    marginBottom: 50,
-    width: 150,
-    height: 150,
-    borderColor: '#AAA',
-    borderWidth: 1
-  },
-  firstName: {
-    fontSize: 22,
-    color: '#FFF',
-    fontWeight: '800'
-  },
-  lastName: {
-    fontSize: 22,
-    color: '#FFF',
-    fontWeight: '800'
-  },
-  email: {
-    fontSize: 22,
-    color: '#FFF',
-    fontWeight: '800'
   }
 });
 const mapStateToProps = state => {
