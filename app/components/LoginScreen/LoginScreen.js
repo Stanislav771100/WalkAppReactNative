@@ -23,8 +23,7 @@ export default class LoginScreen extends Component {
       textEmailError: '',
       emailValid: false,
       passwordValid: false,
-      emailValidServer: false,
-
+      emailValidServer: false
     };
   }
   singIn = () => {
@@ -91,6 +90,7 @@ export default class LoginScreen extends Component {
           style={{ width: '100%', height: '100%' }}>
           <View style={styles.content}>
             <TextInput
+              autoCapitalize={false}
               style={styles.inputStyle}
               onEndEditing={this.varifyEmail}
               placeholder="Enter your email"
@@ -106,16 +106,15 @@ export default class LoginScreen extends Component {
                 </View>
               </>
             )}
-            {this.state.login.length > 0 &&
-              this.state.emailValidServer === false && (
-                <>
-                  <View style={styles.errorEmail}>
-                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                      {this.state.textEmailError}
-                    </Text>
-                  </View>
-                </>
-              )}
+            {this.state.login.length > 0 && this.state.emailValidServer && (
+              <>
+                <View style={styles.errorEmail}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    {this.state.textEmailError}
+                  </Text>
+                </View>
+              </>
+            )}
 
             {/* {this.state.login.length  && ( */}
             {/* )} */}
@@ -124,10 +123,11 @@ export default class LoginScreen extends Component {
               placeholder="Enter your password"
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
+              autoCapitalize={false}
               secureTextEntry={true}
             />
             {this.state.password.length > 0 &&
-              this.state.passwordValid && (
+              this.state.passwordValid === false && (
                 <>
                   <View style={styles.errorPassword}>
                     <Text style={{ textAlign: 'center', color: '#FFF' }}>
@@ -137,7 +137,7 @@ export default class LoginScreen extends Component {
                   </View>
                 </>
               )}
-            
+
             <View style={styles.buttonContainerSingIn}>
               {Platform.OS == 'ios' ? (
                 <Button onPress={this.singIn} title="Sing In" color="#FFF" />
