@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     ...Platform.select({
       ios: {
-        backgroundColor: '#c4a500'
+        backgroundColor: '#396146'
       },
       android: {}
     })
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
 
     ...Platform.select({
       ios: {
-        backgroundColor: '#e3c13b'
+        backgroundColor: '#519668'
       },
       android: {}
     })

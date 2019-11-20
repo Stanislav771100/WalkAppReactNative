@@ -28,8 +28,8 @@ class Routes extends Component {
   render() {
     return (
       <Router
-        navigationBarStyle={{ backgroundColor: '#e3c13b', height: 75 }}
-        titleStyle={{ color: '#FFF', fontSize: 22 }}>
+        navigationBarStyle={{ backgroundColor: '#FFF', height: 75 }}
+        titleStyle={{ color: '#519668', fontSize: 22 }}>
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"

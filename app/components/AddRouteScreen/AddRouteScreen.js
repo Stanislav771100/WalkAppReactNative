@@ -32,7 +32,7 @@ class AddRouteScreen extends React.Component {
         'x-api-key': this.props.user.api
       }
     ).then(response => {
-      console.log(response);
+      console.log(response, 'res');
     });
   };
   render() {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     ...Platform.select({
       ios: {
-        backgroundColor: '#c4a500'
+        backgroundColor: '#519668'
       },
       android: {}
     })
