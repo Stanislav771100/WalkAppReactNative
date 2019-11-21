@@ -34,7 +34,7 @@ class ShowRoutes extends React.Component {
   }
   componentDidMount() {
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
-    
+
     API.getRoutes({
       'x-api-key': this.props.user.api
     }).then(res => {
@@ -42,7 +42,7 @@ class ShowRoutes extends React.Component {
       this.setState({
         routes: newRoutes
       });
-      
+
       console.log(this.state.routes.coordinates.concat());
     });
   }
@@ -98,7 +98,6 @@ class ShowRoutes extends React.Component {
                     <View style={styles.textContainers}>
                       <Text style={styles.typeStyle}>{route.type}</Text>
                       <Text style={styles.titleStyle}>{route.title}</Text>
-                     
                     </View>
                     <View style={styles.miniMapContainer}>
                       <MapView
