@@ -66,10 +66,11 @@ class API {
     return axios({
       method: 'delete',
       url: '/walks',
-      headers,
+      
       data: {
         walk: data
-      }
+      },
+      headers
     });
   }
 }

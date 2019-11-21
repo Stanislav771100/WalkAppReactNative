@@ -34,7 +34,7 @@ class ShowRoutes extends React.Component {
   }
   componentDidMount() {
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
-    console.log(this.props, 'f');
+    
     API.getRoutes({
       'x-api-key': this.props.user.api
     }).then(res => {
@@ -42,11 +42,13 @@ class ShowRoutes extends React.Component {
       this.setState({
         routes: newRoutes
       });
+      
       console.log(this.state.routes.coordinates.concat());
     });
   }
 
   deleteRoute = () => {
+    console.log(this.state.routes);
     API.delete(
       {
         routes: this.state.routes
@@ -96,30 +98,7 @@ class ShowRoutes extends React.Component {
                     <View style={styles.textContainers}>
                       <Text style={styles.typeStyle}>{route.type}</Text>
                       <Text style={styles.titleStyle}>{route.title}</Text>
-                      <View style={styles.buttonsContainer}>
-                        <View style={styles.buttonContainerSingIn}>
-                          {Platform.OS == 'ios' ? (
-                            <Button
-                              onPress={this.singIn}
-                              title="Edit"
-                              color="#FFF"
-                            />
-                          ) : (
-                            <Button onPress={this.singIn} title="Edit" />
-                          )}
-                        </View>
-                        <View style={styles.buttonContainerSingIn}>
-                          {Platform.OS == 'ios' ? (
-                            <Button
-                              onPress={this.deleteRoute}
-                              title="Delete"
-                              color="#FFF"
-                            />
-                          ) : (
-                            <Button onPress={this.deleteRoute} title="Delete" />
-                          )}
-                        </View>
-                      </View>
+                     
                     </View>
                     <View style={styles.miniMapContainer}>
                       <MapView
