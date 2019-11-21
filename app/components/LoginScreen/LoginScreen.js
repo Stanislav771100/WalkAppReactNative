@@ -2,16 +2,10 @@
 import React, { PropTypes, Component } from 'react';
 import { Text, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import API from '../services/api';
-import {
-  StyleSheet,
-  ScrollView,
-  Button,
-  TextInput,
-  ImageBackground
-} from 'react-native';
-import { connect } from 'react-redux';
-import { addApi } from '../services/Root/actions/api';
+import API from '../../services/api';
+import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
+import { Icon } from 'react-native-elements';
+
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -25,30 +19,19 @@ export default class LoginScreen extends Component {
       firstName: '',
       lastName: '',
       email: '',
-      apiKey: ''
+      apiKey: '',
+      textEmailError: '',
+      emailValid: false,
+      passwordValid: false,
+      emailValidServer: false
     };
   }
-
-  // componentDidUpdate(nextProps) {
-  //   if (this.props.user.api) {
-  //     Actions.MainContainer();
-  //     console.log(this.props.user, 'RedirectToMain');
-  //   }
-  // }
-
   singIn = () => {
-    console.log('d');
-    if (this.props.user.api) {
-      Actions.MainContainer();
-      console.log(this.props.user, 'RedirectToMain');
-    }
     API.postLogin({
       email: this.state.login,
       password: this.state.password
     })
-    
       .then(response => {
-        console.log(response);
         this.setState({
           api: response.data.user.apiKey,
           firstName: response.data.user.firstName,
@@ -65,17 +48,37 @@ export default class LoginScreen extends Component {
           { api, firstName, lastName, email },
           'user'
         );
-
-        // this.props.addApi(api, firstName, lastName, email);
-
+        Actions.MainContainer();
       })
       .catch(error => {
-        console.dir(error);
+        this.setState(
+          {
+            textEmailError: error.response.data.message,
+            emailValidServer: !this.state.emailValidServer
+          },
+          () => {
+            console.log(this.state.textEmailError);
+          }
+        );
       });
   };
-
+  varifyEmail = () => {
+    let regexEmail = /[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim;
+    let email = this.state.login;
+    if (email.match(regexEmail)) {
+      this.setState({ emailValid: true });
+    } else {
+    }
+  };
+  varifyPassword = () => {
+    let regexPassword = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+    let password = this.state.password;
+    if (password.match(regexPassword)) {
+      this.setState({ passwordValid: true });
+    } else {
+    }
+  };
   render() {
-
     const onPressNext = () => {
       Actions.Registration();
     };
@@ -83,22 +86,58 @@ export default class LoginScreen extends Component {
     return (
       <View style={styles.main}>
         <ImageBackground
-          source={require('../assets/images/314622.jpg')}
+          source={require('../../assets/images/314622.jpg')}
           style={{ width: '100%', height: '100%' }}>
           <View style={styles.content}>
             <TextInput
+              autoCapitalize={false}
               style={styles.inputStyle}
+              onEndEditing={this.varifyEmail}
               placeholder="Enter your email"
               onChangeText={login => this.setState({ login })}
               value={this.state.login}
             />
+            {this.state.login.length > 0 && this.state.emailValid === false && (
+              <>
+                <View style={styles.errorEmail}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Email must contain '@' and '.'
+                  </Text>
+                </View>
+              </>
+            )}
+            {this.state.login.length > 0 && this.state.emailValidServer && (
+              <>
+                <View style={styles.errorEmail}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    {this.state.textEmailError}
+                  </Text>
+                </View>
+              </>
+            )}
+
+            {/* {this.state.login.length  && ( */}
+            {/* )} */}
             <TextInput
               style={styles.inputStyle}
               placeholder="Enter your password"
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
+              autoCapitalize={false}
               secureTextEntry={true}
             />
+            {this.state.password.length > 0 &&
+              this.state.passwordValid === false && (
+                <>
+                  <View style={styles.errorPassword}>
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                      Password must be at least 8 characters and must contain
+                      uppercase, numbers
+                    </Text>
+                  </View>
+                </>
+              )}
+
             <View style={styles.buttonContainerSingIn}>
               {Platform.OS == 'ios' ? (
                 <Button onPress={this.singIn} title="Sing In" color="#FFF" />
@@ -120,6 +159,18 @@ export default class LoginScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
+  errorPassword: {
+    height: 44,
+    width: '80%',
+    backgroundColor: '#d95555',
+    marginTop: -5
+  },
+  errorEmail: {
+    height: 22,
+    width: '80%',
+    backgroundColor: '#d95555',
+    marginTop: -5
+  },
   buttonContainerSingUp: {
     height: 40,
     width: '50%',
@@ -128,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     ...Platform.select({
       ios: {
-        backgroundColor: '#c4a500'
+        backgroundColor: '#396146'
       },
       android: {}
     })
@@ -142,7 +193,7 @@ const styles = StyleSheet.create({
 
     ...Platform.select({
       ios: {
-        backgroundColor: '#e3c13b'
+        backgroundColor: '#519668'
       },
       android: {}
     })
@@ -155,7 +206,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,
-    margin: 10,
+    marginTop: 30,
     backgroundColor: 'rgba(255,255,255,0.8)'
   },
   content: {
@@ -165,20 +216,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
-
-// const mapStateToProps = state => {
-//   return {
-//     api: state.api
-//   };
-// };
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     add: name => {
-//       dispatch(addApi(name));
-//     }
-//   };
-// };
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(LoginScreen);

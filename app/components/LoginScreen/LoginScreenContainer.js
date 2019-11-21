@@ -1,11 +1,10 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addApi } from '../services/Root/actions/api';
+import { addApi } from '../../actions/api';
 import LoginScreen from './LoginScreen';
-import { changeStateProp } from '../services/Root/actions/index';
+import { changeStateProp } from '../../actions/index';
 
 const mapStateToProps = state => {
-  console.log('statestatestate', state)
   return {
     user: state.user.data
   };

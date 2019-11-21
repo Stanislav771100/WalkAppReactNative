@@ -1,12 +1,14 @@
 import { Container, Header, Tab, Tabs, TabHeading, Footer } from 'native-base';
 import { StyleSheet } from 'react-native';
-import LoginScreen from '../components/LoginScreen';
-import Registration from '../components/Registration';
+import LoginScreen from '../components/LoginScreen/LoginScreen';
+import Registration from '../components/RegistrationScreen/Registration';
 import MainContainer from '../components/MainContainer';
 import { Router, Scene } from 'react-native-router-flux';
-import LoginScreenContainer from '../components/LoginScreenContainer';
+import LoginScreenContainer from '../components/LoginScreen/LoginScreenContainer';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import AddRouteScreen from '../components/AddRouteScreen/AddRouteScreen';
+import ShowRoutes from '../components/ShowRoutesScreen/ShowRoutes';
 class Routes extends Component {
   constructor(props) {
     super(props);
@@ -17,26 +19,27 @@ class Routes extends Component {
   }
   componentDidMount() {
     if (this.props.user && this.props.user.api) {
-      console.log('woegbfiqe', this.props.api.api);
       this.setState({
         redirectToMain: true
-      })
+      });
     } else {
-      console.log('false');
     }
   }
   render() {
     return (
       <Router
-        navigationBarStyle={{ backgroundColor: '#e3c13b', height: 75 }}
-        titleStyle={{ color: '#FFF', fontSize: 22 }}
-        sceneStyle={{ color: 'FFF' }}>
+        navigationBarStyle={{ backgroundColor: '#FFF', height: 75 }}
+        titleStyle={{ color: '#519668', fontSize: 22 }}>
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"
-            
             component={LoginScreenContainer}
             title="Login"
+          />
+          <Scene
+            key="AddRouteScreen"
+            component={AddRouteScreen}
+            title="Add Route"
           />
           <Scene key="Registration" component={Registration} />
           <Scene
@@ -44,6 +47,8 @@ class Routes extends Component {
             component={MainContainer}
             initial={this.state.redirectToMain}
           />
+
+          <Scene key="ShowRoutes" component={ShowRoutes} title="ShowRoutes"/>
         </Scene>
       </Router>
     );

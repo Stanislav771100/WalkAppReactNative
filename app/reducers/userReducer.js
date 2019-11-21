@@ -5,9 +5,7 @@ const initialState = {
   data: {}
 };
 
-const placeReducer = (state = initialState, action) => {
-  console.log('Redux', state);
-  console.log('Redux', action, action.type);
+const userReducer = (state = initialState, action) => {
 
   switch (action.type) {
     case USER_CHANGE:
@@ -19,4 +17,4 @@ const placeReducer = (state = initialState, action) => {
   }
 };
 
-export default placeReducer;
+export default userReducer;
