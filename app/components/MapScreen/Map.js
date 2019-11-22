@@ -9,6 +9,7 @@ import {
   Image,
   Button
 } from 'react-native';
+
 import { Actions } from 'react-native-router-flux';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -31,7 +32,8 @@ export default class Main extends React.Component {
       showAddBicycle: false,
       showAddCar: false,
       title: '',
-      typeRoute: ''
+      typeRoute: '',
+      spinner: false
     };
 
     this.mapView = null;
@@ -84,11 +86,19 @@ export default class Main extends React.Component {
       return error;
     }
   }
+  backButton = () => {
+    this.setState({
+      coordinates: this.state.coordinates.slice(0, -1)
+    });
+  };
+ 
+
   render() {
     const origin = { latitude: 49.437891, longitude: 32.060033 };
     const destination = { latitude: 49.441298, longitude: 32.064704 };
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     const onPressNext = () => {
+
       Actions.AddRouteScreen({
         coordinates: this.state.coordinates,
         title: this.state.title,
@@ -97,6 +107,7 @@ export default class Main extends React.Component {
     };
     return (
       <View style={{ flex: 1 }}>
+         
         <View style={styles.buttonMain}>
           {showAddBicycle === false && showAddCar === false && (
             <View style={styles.buttonContainer}>
@@ -138,7 +149,14 @@ export default class Main extends React.Component {
             </View>
           )}
         </View>
+
         <View style={styles.container}>
+          <TouchableOpacity onPress={this.backButton} style={styles.backButton}>
+            <Image
+              source={require('../../assets/images/back-arrow.png')}
+              style={styles.ImageIconStyle}
+            />
+          </TouchableOpacity>
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.map}
@@ -188,12 +206,24 @@ Main.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    position: 'absolute',
+    backgroundColor: '#dbc604',
+    zIndex: 1000
+  },
   addRouteButton: {
     flex: 1,
     width: '100%',
     height: 50,
     position: 'absolute',
-    zIndex: 999,
+    zIndex: 1001,
     backgroundColor: '#35523e'
   },
   buttonMain: {

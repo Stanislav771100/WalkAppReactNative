@@ -6,6 +6,7 @@ import {
   TextInput,
   Button
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { View } from 'native-base';
 import API from '../../services/api';
 import { connect } from 'react-redux';
@@ -18,9 +19,21 @@ class AddRouteScreen extends React.Component {
       title: '',
       description: '',
       coordinates: [],
-      type: ''
+      type: '',
+      spinner: false
     };
   }
+  componentDidMount() {
+    this.setState({
+      spinner: true
+    });
+    setTimeout(() => {
+      this.setState({
+        spinner: !this.state.spinner
+      });
+    }, 1000);
+  }
+
   addRoute = () => {
     API.postRoutes(
       {
@@ -41,6 +54,11 @@ class AddRouteScreen extends React.Component {
       <ImageBackground
         source={require('../../assets/images/rental-car-solar-eclipse-HERTZCANCEL0817.jpg')}
         style={{ width: '100%', height: '100%' }}>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <View style={styles.main}>
           <TextInput
             style={styles.inputStyle}
