@@ -29,16 +29,11 @@ class API {
       console.dir(error);
     });
   }
-  static getUser(data) {
-    return axios({
-      method: 'post',
-      url: '/users',
-
-      data: {
-        user: data
-      }
-    }).catch(error => {
-      console.dir(error);
+  static getUser(headers, params) {
+    return axios('/users', {
+      method: 'get',
+      headers,
+      params
     });
   }
   static postRoutes(data, headers) {
@@ -62,11 +57,23 @@ class API {
       console.dir(error);
     });
   }
+  static getRoutesUser(headers, id) {
+    return axios({
+      method: 'get',
+      url: '/walks',
+      headers,
+      params: {
+        filter: id || {}
+      }
+    }).catch(error => {
+      console.dir(error);
+    });
+  }
   static delete(data, headers) {
     return axios({
       method: 'delete',
       url: '/walks',
-      
+
       data: {
         walk: data
       },
