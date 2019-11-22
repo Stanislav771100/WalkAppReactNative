@@ -5,6 +5,8 @@ import {
   Dimensions,
   Text,
   Button,
+  Image,
+  TouchableOpacity,
   ScrollView
 } from 'react-native';
 import { View } from 'native-base';
@@ -29,20 +31,25 @@ class ShowRoutes extends React.Component {
       password: '',
       api: '',
       coordinates: [],
-      routes: []
+      routes: [],
+      defaultRoutes: [],
+      showAddWalk: false,
+      showAddBicycle: false,
+      showAddCar: false
     };
   }
   componentDidMount() {
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
-    
+
     API.getRoutes({
       'x-api-key': this.props.user.api
     }).then(res => {
       let newRoutes = this.state.routes.concat(res.data.walks);
       this.setState({
-        routes: newRoutes
+        routes: newRoutes,
+        defaultRoutes: newRoutes
       });
-      
+
       console.log(this.state.routes.coordinates.concat());
     });
   }
@@ -85,11 +92,84 @@ class ShowRoutes extends React.Component {
       return error;
     }
   }
+  showAddWalk = () => {
+    console.log(this.state.routes);
+    let newRoutes = this.state.defaultRoutes;
+    let filerRoutes = newRoutes.filter(item => item.type === 'Walk');
+
+    this.setState({
+      routes: filerRoutes
+    });
+  };
+  showAddBicycle = () => {
+    let newRoutes = this.state.defaultRoutes;
+    let filerRoutes = newRoutes.filter(item => item.type === 'Bicycle');
+
+    this.setState({
+      routes: filerRoutes
+    });
+  };
+  showAddCar = () => {
+    let newRoutes = this.state.defaultRoutes;
+    let filerRoutes = newRoutes.filter(item => item.type === 'Car');
+
+    this.setState({
+      routes: filerRoutes
+    });
+  };
   render() {
-    console.log(this.props, '1111111');
+    const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     return (
       <View style={{ backgroundColor: '#203326' }}>
         <ScrollView>
+          <View style={styles.buttonMain}>
+            {showAddBicycle === false && showAddCar === false && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.showAddWalk}>
+                  <Image
+                    source={require('../../assets/images/sneaker.png')}
+                    style={styles.ImageIconStyle}
+                  />
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Walk
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {showAddWalk === false && showAddCar === false && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.showAddBicycle}>
+                  <Image
+                    source={require('../../assets/images/bike-of-a-gymnast.png')}
+                    style={styles.ImageIconStyle}
+                  />
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Bicycle
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {showAddWalk === false && showAddBicycle === false && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.showAddCar}>
+                  <Image
+                    source={require('../../assets/images/steering-wheel.png')}
+                    style={styles.ImageIconStyle}
+                  />
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Car
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
           <View style={styles.containerRoutes}>
             <View>
               {this.state.routes.map((route, i) => {
@@ -98,7 +178,6 @@ class ShowRoutes extends React.Component {
                     <View style={styles.textContainers}>
                       <Text style={styles.typeStyle}>{route.type}</Text>
                       <Text style={styles.titleStyle}>{route.title}</Text>
-                     
                     </View>
                     <View style={styles.miniMapContainer}>
                       <MapView
@@ -136,6 +215,27 @@ class ShowRoutes extends React.Component {
   }
 }
 const styles = StyleSheet.create({
+  buttonMain: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: '#519668',
+    height: 100,
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    height: 50,
+    width: 50
+  },
+  ImageIconStyle: {
+    height: 50,
+    width: 50
+  },
   buttonsContainer: {
     display: 'flex',
     width: '90%',
