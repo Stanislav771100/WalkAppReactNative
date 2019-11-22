@@ -1,41 +1,321 @@
 import React, { PropTypes, Component } from 'react';
-import { StyleSheet, ImageBackground, Text } from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Text,
+  Image,
+  Button,
+  TouchableOpacity,
+  ScrollView
+} from 'react-native';
 import { View } from 'native-base';
+import ImagePicker from 'react-native-image-picker';
+import {
+  TextField,
+  FilledTextField,
+  OutlinedTextField
+} from 'react-native-material-textfield';
 import { connect } from 'react-redux';
+import API from '../../services/api';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE = 49.437891;
+const LONGITUDE = 32.060033;
+const LATITUDE_DELTA = 0.0722;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 class Profile extends React.Component {
   constructor(props) {
     super(props);
+    this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
     this.state = {
       projects: [],
       issues: [],
       user: '',
       login: '',
       password: '',
-      api: ''
+      api: '',
+      coordinates: [],
+      routes: [],
+      id: [],
+      users: [],
+      avatarSource: null
     };
+  }
+  selectPhotoTapped() {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true
+      }
+    };
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        this.setState({
+          avatarSource: source
+        });
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
+    API.getRoutes({ 'x-api-key': this.props.user.api }).then(res => {
+      let newRoutes = this.state.routes.concat(res.data.walks);
+      let filerRoutes = newRoutes.filter(
+        item => item.createdBy.email === this.props.user.email
+      );
+
+      this.setState({
+        routes: filerRoutes
+      });
+    });
+  }
+  async getDirections(startLoc, destinationLoc) {
+    try {
+      let resp = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&mode=${'DRIVING'}&key=AIzaSyByQD8cPv4oAcyCvuvLPIYM5K`
+      );
+      let respJson = await resp.json();
+      let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      let coords = points.map((point, index) => {
+        return {
+          latitude: point[0],
+          longitude: point[1]
+        };
+      });
+      this.setState({ coords: coords });
+      return coords;
+    } catch (error) {
+      return error;
+    }
   }
 
   render() {
     const { firstName, lastName, email } = this.props.user;
+
     return (
       <View style={styles.main}>
         <ImageBackground
           source={require('../../assets/images/giphy.gif')}
           style={{ width: '100%', height: '100%' }}>
-          <View style={styles.content}>
-            <View style={styles.image} />
-            <View style={styles.description}>
-              <Text style={styles.firstName}>{firstName}</Text>
-              <Text style={styles.lastName}>{lastName}</Text>
-              <Text style={styles.email}>{email}</Text>
+          <ScrollView>
+            <View style={styles.content}>
+              <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                <View
+                  style={[
+                    styles.avatar,
+                    styles.avatarContainer,
+                    { marginBottom: 20 }
+                  ]}>
+                  {this.state.avatarSource === null ? (
+                    <Text>Select a Photo</Text>
+                  ) : (
+                    <Image
+                      style={styles.avatar}
+                      source={this.state.avatarSource}
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+              <View style={styles.description}>
+                <TextField editable={false} value={firstName} />
+                <TextField editable={false} value={lastName} />
+                <TextField editable={false} value={email} />
+
+              </View>
             </View>
-          </View>
+            <View style={styles.profileEdit}>
+              <View style={styles.buttonContainerEditProfile}>
+                {Platform.OS == 'ios' ? (
+                  <Button
+                    onPress={this.deleteRoute}
+                    title="Edit Profile"
+                    color="#FFF"
+                  />
+                ) : (
+                  <Button onPress={this.deleteRoute} title="Delete" />
+                )}
+              </View>
+            </View>
+            <View style={styles.containerRoutes}>
+              <View>
+                {this.state.routes.map((route, i) => {
+                  return (
+                    <View style={styles.RoutesContainers} key={i}>
+                      <View style={styles.textContainers}>
+                        <Text style={styles.typeStyle}>{route.type}</Text>
+                        <Text style={styles.titleStyle}>{route.title}</Text>
+                        <View style={styles.buttonsContainer}>
+                          <View style={styles.buttonContainerSingIn}>
+                            {Platform.OS == 'ios' ? (
+                              <Button
+                                onPress={this.singIn}
+                                title="Edit"
+                                color="#FFF"
+                              />
+                            ) : (
+                              <Button onPress={this.singIn} title="Edit" />
+                            )}
+                          </View>
+                          <View style={styles.buttonContainerSingIn}>
+                            {Platform.OS == 'ios' ? (
+                              <Button
+                                onPress={this.deleteRoute}
+                                title="Delete"
+                                color="#FFF"
+                              />
+                            ) : (
+                              <Button
+                                onPress={this.deleteRoute}
+                                title="Delete"
+                              />
+                            )}
+                          </View>
+                        </View>
+                      </View>
+                      <View style={styles.miniMapContainer}>
+                        <MapView
+                          key={i}
+                          style={styles.map}
+                          provider={PROVIDER_GOOGLE}
+                          initialRegion={{
+                            latitude: LATITUDE,
+                            longitude: LONGITUDE,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA
+                          }}>
+                          {route.coordinates.map((coordinate, j) => (
+                            <MapView.Marker
+                              key={`coordinate_${j}`}
+                              coordinate={coordinate}
+                            />
+                          ))}
+                          <MapView.Polyline
+                            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                            coordinates={route.coordinates}
+                            strokeWidth={2}
+                            strokeColor="red"
+                          />
+                        </MapView>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          </ScrollView>
         </ImageBackground>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
+  description: {
+    width: '50%',
+
+  },
+  profileEdit: {
+    width: '100%',
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
+  },
+  buttonsContainer: {
+    display: 'flex',
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  buttonContainerEditProfile: {
+    height: 40,
+    width: '45%',
+    borderColor: '#FFF',
+    borderRadius: 5,
+    marginTop: 20,
+
+    ...Platform.select({
+      ios: {
+        backgroundColor: '#396146'
+      },
+      android: {}
+    })
+  },
+  buttonContainerSingIn: {
+    height: 40,
+    width: '45%',
+    borderColor: '#FFF',
+    borderRadius: 5,
+    marginTop: 20,
+
+    ...Platform.select({
+      ios: {
+        backgroundColor: '#396146'
+      },
+      android: {}
+    })
+  },
+  typeStyle: {
+    fontSize: 20,
+    fontWeight: '600'
+  },
+  titleStyle: {},
+  textContainers: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '60%',
+    justifyContent: 'center'
+  },
+  containerRoutes: {
+    marginTop: 20,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  RoutesContainers: {
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 15,
+    overflow: 'hidden'
+  },
+  miniMapContainer: {
+    width: '40%',
+    height: 120
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject
+  },
   main: {
     flex: 1,
     backgroundColor: '#ffd152',
@@ -43,6 +323,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   content: {
+    height: 200,
     display: 'flex',
     justifyContent: 'space-around',
     width: '100%',

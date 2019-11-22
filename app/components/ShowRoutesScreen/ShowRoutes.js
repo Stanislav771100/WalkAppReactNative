@@ -135,26 +135,7 @@ class ShowRoutes extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  buttonsContainer: {
-    display: 'flex',
-    width: '90%',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  buttonContainerSingIn: {
-    height: 40,
-    width: '45%',
-    borderColor: '#FFF',
-    borderRadius: 5,
-    marginTop: 20,
-
-    ...Platform.select({
-      ios: {
-        backgroundColor: '#396146'
-      },
-      android: {}
-    })
-  },
+ 
   typeStyle: {
     fontSize: 20,
     fontWeight: '600'
