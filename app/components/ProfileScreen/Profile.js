@@ -40,9 +40,15 @@ class Profile extends React.Component {
       routes: [],
       id: [],
       users: [],
-      avatarSource: null
+      avatarSource: null,
+      editable: false,
+      editProfileTitle: 'Edit Profile',
+      firstName: this.props.user.firstName,
+      lastName: this.props.user.lastName,
+      email: this.props.user.email
     };
   }
+
   selectPhotoTapped() {
     const options = {
       quality: 1.0,
@@ -53,20 +59,11 @@ class Profile extends React.Component {
       }
     };
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
-        console.log('User cancelled photo picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
       } else {
         let source = { uri: response.uri };
-
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
         this.setState({
           avatarSource: source
         });
@@ -106,10 +103,47 @@ class Profile extends React.Component {
       return error;
     }
   }
-
+  editProfile = () => {
+    if (this.state.editProfileTitle === 'Edit Profile') {
+      this.setState({
+        editable: true,
+        editProfileTitle: 'Save'
+      });
+    } else if (this.state.editProfileTitle === 'Save') {
+      this.setState({
+        editable: false,
+        editProfileTitle: 'Edit Profile'
+      });
+      API.updateUser(
+        {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          email: this.state.email
+        },
+        this.props.user.id,
+        { 'x-api-key': this.props.user.api }
+      ).then(res => {
+        const { firstName, lastName, email } = this.state;
+        this.props.changeStateProp('data', res.data.user, 'main');
+        this.setState({
+          isEdit: false,
+          firstName: this.props.firstName,
+          lastName: this.props.lastName,
+          email: this.props.email
+        });
+      });
+    }
+  };
   render() {
-    const { firstName, lastName, email } = this.props.user;
-
+    const {
+      editable,
+      editProfileTitle,
+      avatarSource,
+      routes,
+      firstName,
+      lastName,
+      email
+    } = this.state;
     return (
       <View style={styles.main}>
         <ImageBackground
@@ -124,29 +158,39 @@ class Profile extends React.Component {
                     styles.avatarContainer,
                     { marginBottom: 20 }
                   ]}>
-                  {this.state.avatarSource === null ? (
+                  {avatarSource === null ? (
                     <Text>Select a Photo</Text>
                   ) : (
-                    <Image
-                      style={styles.avatar}
-                      source={this.state.avatarSource}
-                    />
+                    <Image style={styles.avatar} source={avatarSource} />
                   )}
                 </View>
               </TouchableOpacity>
               <View style={styles.description}>
-                <TextField editable={false} value={firstName} />
-                <TextField editable={false} value={lastName} />
-                <TextField editable={false} value={email} />
-
+                <TextField
+                  editable={editable}
+                  onChangeText={firstName => {
+                    this.setState({ firstName });
+                  }}
+                  value={firstName}
+                />
+                <TextField
+                  editable={editable}
+                  onChange={e => this.setState({ lastName: e.target.value })}
+                  value={lastName}
+                />
+                <TextField
+                  editable={editable}
+                  onChange={e => this.setState({ email: e.target.value })}
+                  value={email}
+                />
               </View>
             </View>
             <View style={styles.profileEdit}>
               <View style={styles.buttonContainerEditProfile}>
                 {Platform.OS == 'ios' ? (
                   <Button
-                    onPress={this.deleteRoute}
-                    title="Edit Profile"
+                    onPress={this.editProfile}
+                    title={editProfileTitle}
                     color="#FFF"
                   />
                 ) : (
@@ -156,7 +200,7 @@ class Profile extends React.Component {
             </View>
             <View style={styles.containerRoutes}>
               <View>
-                {this.state.routes.map((route, i) => {
+                {routes.map((route, i) => {
                   return (
                     <View style={styles.RoutesContainers} key={i}>
                       <View style={styles.textContainers}>
@@ -228,8 +272,7 @@ class Profile extends React.Component {
 }
 const styles = StyleSheet.create({
   description: {
-    width: '50%',
-
+    width: '50%'
   },
   profileEdit: {
     width: '100%',
