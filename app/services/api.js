@@ -57,6 +57,13 @@ class API {
       console.dir(error);
     });
   }
+  static updateUser(user, id, headers) {
+    return axios(`/users/${id}`, {
+      method: 'put',
+      headers,
+      data: { user }
+    });
+  }
   static getRoutesUser(headers, id) {
     return axios({
       method: 'get',

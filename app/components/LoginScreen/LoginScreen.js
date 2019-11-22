@@ -23,7 +23,8 @@ export default class LoginScreen extends Component {
       textEmailError: '',
       emailValid: false,
       passwordValid: false,
-      emailValidServer: false
+      emailValidServer: false,
+      id: ''
     };
   }
   singIn = () => {
@@ -36,30 +37,23 @@ export default class LoginScreen extends Component {
           api: response.data.user.apiKey,
           firstName: response.data.user.firstName,
           lastName: response.data.user.lastName,
-          email: response.data.user.email
+          email: response.data.user.email,
+          id: response.data.user._id
         });
 
-        let api = this.state.api;
-        let firstName = this.state.firstName;
-        let lastName = this.state.lastName;
-        let email = this.state.email;
+        const { api, firstName, lastName, email, id } = this.state;
         this.props.changeStateProp(
           'data',
-          { api, firstName, lastName, email },
+          { api, firstName, lastName, email, id },
           'user'
         );
         Actions.MainContainer();
       })
       .catch(error => {
-        this.setState(
-          {
-            textEmailError: error.response.data.message,
-            emailValidServer: !this.state.emailValidServer
-          },
-          () => {
-            console.log(this.state.textEmailError);
-          }
-        );
+        this.setState({
+          textEmailError: error.response.data.message,
+          emailValidServer: !this.state.emailValidServer
+        });
       });
   };
   varifyEmail = () => {
