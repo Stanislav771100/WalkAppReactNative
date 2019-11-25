@@ -3,7 +3,9 @@ import { StyleSheet, ImageBackground, TextInput, Button } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { View } from 'native-base';
 import API from '../../services/api';
+import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import LoadScreen from '../../services/LoadScreen';
 
 class AddRouteScreen extends Component {
   constructor(props) {
@@ -13,18 +15,11 @@ class AddRouteScreen extends Component {
       description: '',
       coordinates: [],
       type: '',
-      spinner: false
+      loaded: this.props.loaded
     };
   }
   componentDidMount() {
-    this.setState({
-      spinner: true
-    });
-    setTimeout(() => {
-      this.setState({
-        spinner: !this.state.spinner
-      });
-    }, 1000);
+    LoadScreen.load(b => this.setState({ loaded: true }));
   }
 
   addRoute = () => {
@@ -37,44 +32,59 @@ class AddRouteScreen extends Component {
       {
         'x-api-key': this.props.user.api
       }
-    ).then(response => {});
+    ).then(response => {
+      Actions.MainContainer({ loaded: true });
+    });
   };
   render() {
     console.log(this.props.coordinates, this.props.user.api);
     return (
-      <ImageBackground
-        source={require('../../assets/images/rental-car-solar-eclipse-HERTZCANCEL0817.jpg')}
-        style={{ width: '100%', height: '100%' }}>
-        <Spinner
-          visible={this.state.spinner}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-        />
-        <View style={styles.main}>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Title"
-            onChangeText={type => this.setState({ type })}
-            value={this.props.typeRoute}
+      <>
+        {this.state.loaded === false ? (
+          <ImageBackground
+            source={require('../../assets/images/walk-cycle-15.gif')}
+            style={{ width: '100%', height: '100%' }}
           />
-          <TextInput
-            style={styles.inputStyleDescription}
-            placeholder="Description"
-            onChangeText={description => this.setState({ description })}
-            value={this.state.description}
-            multiline
-            secureTextEntry={true}
-          />
+        ) : (
+          <ImageBackground
+            source={require('../../assets/images/rental-car-solar-eclipse-HERTZCANCEL0817.jpg')}
+            style={{ width: '100%', height: '100%' }}>
+            <Spinner
+              visible={this.state.spinner}
+              textContent={'Loading...'}
+              textStyle={styles.spinnerTextStyle}
+            />
+            <View style={styles.main}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Title"
+                onChangeText={type => this.setState({ type })}
+                value={this.props.typeRoute}
+              />
+              <TextInput
+                style={styles.inputStyleDescription}
+                placeholder="Description"
+                onChangeText={description => this.setState({ description })}
+                value={this.state.description}
+                multiline
+                secureTextEntry={true}
+              />
 
-          <View style={styles.buttonContainerSingUp}>
-            {Platform.OS == 'ios' ? (
-              <Button onPress={this.addRoute} title="Add Route" color="#FFF" />
-            ) : (
-              <Button onPress={this.addRoute} title="Add Route" />
-            )}
-          </View>
-        </View>
-      </ImageBackground>
+              <View style={styles.buttonContainerSingUp}>
+                {Platform.OS == 'ios' ? (
+                  <Button
+                    onPress={this.addRoute}
+                    title="Add Route"
+                    color="#FFF"
+                  />
+                ) : (
+                  <Button onPress={this.addRoute} title="Add Route" />
+                )}
+              </View>
+            </View>
+          </ImageBackground>
+        )}
+      </>
     );
   }
 }

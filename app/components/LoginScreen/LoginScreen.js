@@ -5,10 +5,12 @@ import { Actions } from 'react-native-router-flux';
 import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 import { Icon } from 'react-native-elements';
+import LoadScreen from '../../services/LoadScreen';
 
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
+    
     this.state = {
       projects: [],
       issues: [],
@@ -24,8 +26,12 @@ export default class LoginScreen extends Component {
       emailValid: false,
       passwordValid: false,
       emailValidServer: false,
-      id: ''
+      id: '',
+      loaded: false
     };
+  }
+  componentDidMount() {
+    LoadScreen.load(b => this.setState({ loaded: true }));
   }
   singIn = () => {
     API.postLogin({
@@ -78,77 +84,95 @@ export default class LoginScreen extends Component {
     };
 
     return (
-      <View style={styles.main}>
-        <ImageBackground
-          source={require('../../assets/images/314622.jpg')}
-          style={{ width: '100%', height: '100%' }}>
-          <View style={styles.content}>
-            <TextInput
-              autoCapitalize={false}
-              style={styles.inputStyle}
-              onEndEditing={this.varifyEmail}
-              placeholder="Enter your email"
-              onChangeText={login => this.setState({ login })}
-              value={this.state.login}
-            />
-            {this.state.login.length > 0 && this.state.emailValid === false && (
-              <>
-                <View style={styles.errorEmail}>
-                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                    Email must contain '@' and '.'
-                  </Text>
-                </View>
-              </>
-            )}
-            {this.state.login.length > 0 && this.state.emailValidServer && (
-              <>
-                <View style={styles.errorEmail}>
-                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                    {this.state.textEmailError}
-                  </Text>
-                </View>
-              </>
-            )}
+      <>
+        {this.state.loaded === false ? (
+          <ImageBackground
+            source={require('../../assets/images/walk-cycle-15.gif')}
+            style={{ width: '100%', height: '100%' }}
+          />
+        ) : (
+          <View style={styles.main}>
+            <ImageBackground
+              source={require('../../assets/images/314622.jpg')}
+              style={{ width: '100%', height: '100%' }}>
+              <View style={styles.content}>
+                <TextInput
+                  autoCapitalize={false}
+                  style={styles.inputStyle}
+                  onEndEditing={this.varifyEmail}
+                  placeholder="Enter your email"
+                  onChangeText={login => this.setState({ login })}
+                  value={this.state.login}
+                />
+                {this.state.login.length > 0 &&
+                  this.state.emailValid === false && (
+                    <>
+                      <View style={styles.errorEmail}>
+                        <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                          Email must contain '@' and '.'
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                {this.state.login.length > 0 && this.state.emailValidServer && (
+                  <>
+                    <View style={styles.errorEmail}>
+                      <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                        {this.state.textEmailError}
+                      </Text>
+                    </View>
+                  </>
+                )}
 
-            {/* {this.state.login.length  && ( */}
-            {/* )} */}
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your password"
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-              autoCapitalize={false}
-              secureTextEntry={true}
-            />
-            {this.state.password.length > 0 &&
-              this.state.passwordValid === false && (
-                <>
-                  <View style={styles.errorPassword}>
-                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                      Password must be at least 8 characters and must contain
-                      uppercase, numbers
-                    </Text>
-                  </View>
-                </>
-              )}
+                {/* {this.state.login.length  && ( */}
+                {/* )} */}
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Enter your password"
+                  onChangeText={password => this.setState({ password })}
+                  value={this.state.password}
+                  autoCapitalize={false}
+                  secureTextEntry={true}
+                />
+                {this.state.password.length > 0 &&
+                  this.state.passwordValid === false && (
+                    <>
+                      <View style={styles.errorPassword}>
+                        <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                          Password must be at least 8 characters and must
+                          contain uppercase, numbers
+                        </Text>
+                      </View>
+                    </>
+                  )}
 
-            <View style={styles.buttonContainerSingIn}>
-              {Platform.OS == 'ios' ? (
-                <Button onPress={this.singIn} title="Sing In" color="#FFF" />
-              ) : (
-                <Button onPress={this.singIn} title="Sing In" />
-              )}
-            </View>
-            <View style={styles.buttonContainerSingUp}>
-              {Platform.OS == 'ios' ? (
-                <Button onPress={onPressNext} title="Sing Up" color="#FFF" />
-              ) : (
-                <Button onPress={onPressNext} title="Sing Up" />
-              )}
-            </View>
+                <View style={styles.buttonContainerSingIn}>
+                  {Platform.OS == 'ios' ? (
+                    <Button
+                      onPress={this.singIn}
+                      title="Sing In"
+                      color="#FFF"
+                    />
+                  ) : (
+                    <Button onPress={this.singIn} title="Sing In" />
+                  )}
+                </View>
+                <View style={styles.buttonContainerSingUp}>
+                  {Platform.OS == 'ios' ? (
+                    <Button
+                      onPress={onPressNext}
+                      title="Sing Up"
+                      color="#FFF"
+                    />
+                  ) : (
+                    <Button onPress={onPressNext} title="Sing Up" />
+                  )}
+                </View>
+              </View>
+            </ImageBackground>
           </View>
-        </ImageBackground>
-      </View>
+        )}
+      </>
     );
   }
 }
