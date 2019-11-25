@@ -14,7 +14,7 @@ module.exports = {
     'react/prop-types': 'off',
     'no-console': 'off',
     'no-prototype-builtins': 'off',
-    'no-inline-styles': 'off'
+    "no-inline-comments": 'off',
   },
   parser: 'babel-eslint'
 };

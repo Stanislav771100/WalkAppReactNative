@@ -119,7 +119,6 @@ class ShowRoutes extends Component {
   render() {
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     return (
-      // eslint-disable-next-line react-native/no-inline-styles
       <View style={{ backgroundColor: '#cccccc' }}>
         <ScrollView>
           <View style={styles.buttonMain}>
