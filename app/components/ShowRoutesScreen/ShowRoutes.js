@@ -1,10 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import {
   StyleSheet,
-  ImageBackground,
   Dimensions,
   Text,
-  Button,
   Image,
   TouchableOpacity,
   ScrollView
@@ -12,7 +10,7 @@ import {
 import { View } from 'native-base';
 import { connect } from 'react-redux';
 import API from '../../services/api';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -79,6 +77,7 @@ class ShowRoutes extends Component {
         `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&mode=${'DRIVING'}&key=AIzaSyByQD8cPv4oAcyCvuvLPIYM5K`
       );
       let respJson = await resp.json();
+      // eslint-disable-next-line no-undef
       let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
       let coords = points.map((point, index) => {
         return {
@@ -120,6 +119,7 @@ class ShowRoutes extends Component {
   render() {
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     return (
+      // eslint-disable-next-line react-native/no-inline-styles
       <View style={{ backgroundColor: '#cccccc' }}>
         <ScrollView>
           <View style={styles.buttonMain}>
