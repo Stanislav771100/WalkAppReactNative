@@ -11,7 +11,7 @@ module.exports = {
   rules: {
     'import/prefer-default-export': 'off',
     'no-param-reassign': ['error', { props: false }],
-    'react/prop-types': ['error', { ignore: ['navigation'] }],
+    'react/prop-types': 'off',
     'no-console': 'off',
     'no-prototype-builtins': 'off'
   },
