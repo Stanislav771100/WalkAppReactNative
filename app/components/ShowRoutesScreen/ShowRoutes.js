@@ -20,7 +20,7 @@ const LATITUDE = 49.437891;
 const LONGITUDE = 32.060033;
 const LATITUDE_DELTA = 0.0722;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-class ShowRoutes extends React.Component {
+class ShowRoutes extends Component {
   constructor(props) {
     super(props);
     this.state = {

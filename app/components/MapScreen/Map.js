@@ -22,7 +22,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
 import Polyline from '@mapbox/polyline';
 
-export default class Main extends React.Component {
+export default class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -91,14 +91,12 @@ export default class Main extends React.Component {
       coordinates: this.state.coordinates.slice(0, -1)
     });
   };
- 
 
   render() {
     const origin = { latitude: 49.437891, longitude: 32.060033 };
     const destination = { latitude: 49.441298, longitude: 32.064704 };
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     const onPressNext = () => {
-
       Actions.AddRouteScreen({
         coordinates: this.state.coordinates,
         title: this.state.title,
@@ -107,7 +105,6 @@ export default class Main extends React.Component {
     };
     return (
       <View style={{ flex: 1 }}>
-         
         <View style={styles.buttonMain}>
           {showAddBicycle === false && showAddCar === false && (
             <View style={styles.buttonContainer}>

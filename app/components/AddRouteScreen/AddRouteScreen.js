@@ -1,18 +1,11 @@
 import React, { PropTypes, Component } from 'react';
-import {
-  StyleSheet,
-  ImageBackground,
-  Text,
-  TextInput,
-  Button
-} from 'react-native';
+import { StyleSheet, ImageBackground, TextInput, Button } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { View } from 'native-base';
 import API from '../../services/api';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 
-class AddRouteScreen extends React.Component {
+class AddRouteScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
