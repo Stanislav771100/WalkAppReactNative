@@ -120,7 +120,7 @@ class ShowRoutes extends Component {
   render() {
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     return (
-      <View style={{ backgroundColor: '#203326' }}>
+      <View style={{ backgroundColor: '#cccccc' }}>
         <ScrollView>
           <View style={styles.buttonMain}>
             {showAddBicycle === false && showAddCar === false && (
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   buttonMain: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#519668',
+    backgroundColor: '#292929',
     height: 100,
     justifyContent: 'space-around',
     alignItems: 'center'
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
   containerRoutes: {
     marginTop: 20,
-    backgroundColor: '#203326',
+    backgroundColor: '#cccccc',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
