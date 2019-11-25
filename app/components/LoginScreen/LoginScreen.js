@@ -78,6 +78,76 @@ export default class LoginScreen extends Component {
     };
 
     return (
+      <>
+        {this.state.loaded === false ? (
+          <ImageBackground
+            source={require('../../assets/images/walk-cycle-15.gif')}
+            style={{ width: '100%', height: '100%' }}
+          />
+        ) : (
+          <View style={styles.main}>
+            <ImageBackground
+              source={require('../../assets/images/314622.jpg')}
+              style={{ width: '100%', height: '100%' }}>
+              <View style={styles.content}>
+                <TextInput
+                  autoCapitalize={false}
+                  style={styles.inputStyle}
+                  onEndEditing={this.varifyEmail}
+                  placeholder="Enter your email"
+                  onChangeText={login => this.setState({ login })}
+                  value={this.state.login}
+                />
+                {this.state.login.length > 0 &&
+                  this.state.emailValid === false && (
+                    <>
+                      <View style={styles.errorEmail}>
+                        <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                          Email must contain '@' and '.'
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                {this.state.login.length > 0 && this.state.emailValidServer && (
+                  <>
+                    <View style={styles.errorEmail}>
+                      <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                        {this.state.textEmailError}
+                      </Text>
+                    </View>
+                  </>
+                )}
+
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Enter your password"
+                  onChangeText={password => this.setState({ password })}
+                  value={this.state.password}
+                  autoCapitalize={false}
+                  secureTextEntry={true}
+                />
+                {this.state.password.length > 0 &&
+                  this.state.passwordValid === false && (
+                    <>
+                      <View style={styles.errorPassword}>
+                        <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                          Password must be at least 8 characters and must
+                          contain uppercase, numbers
+                        </Text>
+                      </View>
+                    </>
+                  )}
+
+                <View style={styles.buttonContainerSingIn}>
+                  {Platform.OS == 'ios' ? (
+                    <Button
+                      onPress={this.singIn}
+                      title="Sing In"
+                      color="#FFF"
+                    />
+                  ) : (
+                    <Button onPress={this.singIn} title="Sing In" />
+                  )}
       <View style={styles.main}>
         <ImageBackground
           source={require('../../assets/images/night-road-in-paris-copy.jpg')}
