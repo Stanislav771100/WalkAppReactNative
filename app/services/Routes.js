@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import LoginScreen from '../components/LoginScreen/LoginScreen';
 import Registration from '../components/RegistrationScreen/Registration';
 import MainContainer from '../components/MainContainer';
-import { Router, Scene } from 'react-native-router-flux';
+import { Router, Scene, ActionConst } from 'react-native-router-flux';
 import LoginScreenContainer from '../components/LoginScreen/LoginScreenContainer';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -45,10 +45,17 @@ class Routes extends Component {
           <Scene
             key="MainContainer"
             component={MainContainer}
+            type={ActionConst.RESET}
             initial={this.state.redirectToMain}
+            back={LoginScreenContainer}
           />
 
-          <Scene key="ShowRoutes" component={ShowRoutes} title="ShowRoutes"/>
+          <Scene
+            key="ShowRoutes"
+            component={ShowRoutes}
+            hideNavBar={true}
+            title="ShowRoutes"
+          />
         </Scene>
       </Router>
     );
