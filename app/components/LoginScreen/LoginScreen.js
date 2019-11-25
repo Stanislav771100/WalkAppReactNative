@@ -124,8 +124,6 @@ export default class LoginScreen extends Component {
                   </>
                 )}
 
-                {/* {this.state.login.length  && ( */}
-                {/* )} */}
                 <TextInput
                   style={styles.inputStyle}
                   placeholder="Enter your password"
