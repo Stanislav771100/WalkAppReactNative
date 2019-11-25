@@ -44,9 +44,7 @@ class AddRouteScreen extends React.Component {
       {
         'x-api-key': this.props.user.api
       }
-    ).then(response => {
-      console.log(response, 'res');
-    });
+    ).then(response => {});
   };
   render() {
     console.log(this.props.coordinates, this.props.user.api);
