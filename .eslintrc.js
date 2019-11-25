@@ -13,7 +13,8 @@ module.exports = {
     'no-param-reassign': ['error', { props: false }],
     'react/prop-types': 'off',
     'no-console': 'off',
-    'no-prototype-builtins': 'off'
+    'no-prototype-builtins': 'off',
+    "no-inline-comments": 'off',
   },
   parser: 'babel-eslint'
 };

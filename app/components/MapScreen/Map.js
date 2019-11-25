@@ -112,7 +112,7 @@ export default class Main extends Component {
       <>
         {this.state.loaded === false ? (
           <ImageBackground
-            source={require('../../assets/images/Un8o.gif')}
+            source={require('../../assets/images/diogo_leaseplan.gif')}
             style={{ width: '100%', height: '100%' }}
           />
         ) : (
@@ -170,7 +170,7 @@ export default class Main extends Component {
                 onPress={this.backButton}
                 style={styles.backButton}>
                 <Image
-                  source={require('../../assets/images/back-arrow.png')}
+                  source={require('../../assets/images/1111.png')}
                   style={styles.ImageIconStyle}
                 />
               </TouchableOpacity>
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     position: 'absolute',
-    backgroundColor: '#dbc604',
+    backgroundColor: '#363636',
     zIndex: 1000
   },
   addRouteButton: {
@@ -243,12 +243,12 @@ const styles = StyleSheet.create({
     height: 50,
     position: 'absolute',
     zIndex: 1001,
-    backgroundColor: '#35523e'
+    backgroundColor: '#292929'
   },
   buttonMain: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#519668',
+    backgroundColor: '#292929',
     height: 100,
     justifyContent: 'space-around',
     alignItems: 'center'

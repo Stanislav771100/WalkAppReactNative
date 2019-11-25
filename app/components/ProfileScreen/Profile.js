@@ -146,9 +146,7 @@ class Profile extends Component {
     } = this.state;
     return (
       <View style={styles.main}>
-        <ImageBackground
-          source={require('../../assets/images/giphy.gif')}
-          style={{ width: '100%', height: '100%' }}>
+        <View style={styles.backgroundColor}>
           <ScrollView>
             <View style={styles.content}>
               <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
@@ -265,7 +263,7 @@ class Profile extends Component {
               </View>
             </View>
           </ScrollView>
-        </ImageBackground>
+        </View>
       </View>
     );
   }
@@ -273,6 +271,9 @@ class Profile extends Component {
 const styles = StyleSheet.create({
   description: {
     width: '50%'
+  },
+  backgroundColor: {
+    backgroundColor: '#f0f0f0'
   },
   profileEdit: {
     width: '100%',
@@ -307,7 +308,7 @@ const styles = StyleSheet.create({
 
     ...Platform.select({
       ios: {
-        backgroundColor: '#396146'
+        backgroundColor: '#292929'
       },
       android: {}
     })
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
 
     ...Platform.select({
       ios: {
-        backgroundColor: '#396146'
+        backgroundColor: '#292929'
       },
       android: {}
     })

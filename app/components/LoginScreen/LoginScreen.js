@@ -5,12 +5,10 @@ import { Actions } from 'react-native-router-flux';
 import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 import { Icon } from 'react-native-elements';
-import LoadScreen from '../../services/LoadScreen';
 
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    
     this.state = {
       projects: [],
       issues: [],
@@ -26,12 +24,8 @@ export default class LoginScreen extends Component {
       emailValid: false,
       passwordValid: false,
       emailValidServer: false,
-      id: '',
-      loaded: false
+      id: ''
     };
-  }
-  componentDidMount() {
-    LoadScreen.load(b => this.setState({ loaded: true }));
   }
   singIn = () => {
     API.postLogin({
@@ -154,23 +148,74 @@ export default class LoginScreen extends Component {
                   ) : (
                     <Button onPress={this.singIn} title="Sing In" />
                   )}
+      <View style={styles.main}>
+        <ImageBackground
+          source={require('../../assets/images/night-road-in-paris-copy.jpg')}
+          style={{ width: '100%', height: '100%' }}>
+          <View style={styles.content}>
+            <TextInput
+              autoCapitalize={false}
+              style={styles.inputStyle}
+              onEndEditing={this.varifyEmail}
+              placeholder="Enter your email"
+              onChangeText={login => this.setState({ login })}
+              value={this.state.login}
+            />
+            {this.state.login.length > 0 && this.state.emailValid === false && (
+              <>
+                <View style={styles.errorEmail}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Email must contain '@' and '.'
+                  </Text>
                 </View>
-                <View style={styles.buttonContainerSingUp}>
-                  {Platform.OS == 'ios' ? (
-                    <Button
-                      onPress={onPressNext}
-                      title="Sing Up"
-                      color="#FFF"
-                    />
-                  ) : (
-                    <Button onPress={onPressNext} title="Sing Up" />
-                  )}
+              </>
+            )}
+            {this.state.login.length > 0 && this.state.emailValidServer && (
+              <>
+                <View style={styles.errorEmail}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    {this.state.textEmailError}
+                  </Text>
                 </View>
-              </View>
-            </ImageBackground>
+              </>
+            )}
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter your password"
+              onChangeText={password => this.setState({ password })}
+              value={this.state.password}
+              autoCapitalize={false}
+              secureTextEntry={true}
+            />
+            {this.state.password.length > 0 &&
+              this.state.passwordValid === false && (
+                <>
+                  <View style={styles.errorPassword}>
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                      Password must be at least 8 characters and must contain
+                      uppercase, numbers
+                    </Text>
+                  </View>
+                </>
+              )}
+
+            <View style={styles.buttonContainerSingIn}>
+              {Platform.OS == 'ios' ? (
+                <Button onPress={this.singIn} title="Sing In" color="#FFF" />
+              ) : (
+                <Button onPress={this.singIn} title="Sing In" />
+              )}
+            </View>
+            <View style={styles.buttonContainerSingUp}>
+              {Platform.OS == 'ios' ? (
+                <Button onPress={onPressNext} title="Sing Up" color="#FFF" />
+              ) : (
+                <Button onPress={onPressNext} title="Sing Up" />
+              )}
+            </View>
           </View>
-        )}
-      </>
+        </ImageBackground>
+      </View>
     );
   }
 }
@@ -188,34 +233,34 @@ const styles = StyleSheet.create({
     marginTop: -5
   },
   buttonContainerSingUp: {
-    height: 40,
-    width: '50%',
-
-    borderRadius: 5,
-    marginTop: 20,
+    height: 55,
+    width: '60%',
+    borderRadius: 10,
+    marginTop: 30,
+    padding: 7,
     ...Platform.select({
       ios: {
-        backgroundColor: '#396146'
+        backgroundColor: '#292929'
       },
       android: {}
     })
   },
   buttonContainerSingIn: {
-    height: 40,
-    width: '50%',
+    height: 55,
+    width: '60%',
     borderColor: '#FFF',
-    borderRadius: 5,
-    marginTop: 20,
-
+    borderRadius: 10,
+    marginTop: 50,
+    padding: 7,
     ...Platform.select({
       ios: {
-        backgroundColor: '#519668'
+        backgroundColor: '#2b8a32'
       },
       android: {}
     })
   },
   inputStyle: {
-    height: 50,
+    height: 60,
     width: '80%',
     borderColor: '#FFF',
     borderStyle: 'solid',
@@ -223,10 +268,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     marginTop: 30,
-    backgroundColor: 'rgba(255,255,255,0.8)'
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    fontSize: 15
   },
   content: {
-    height: '80%',
+    height: '90%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

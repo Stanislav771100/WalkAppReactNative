@@ -28,8 +28,8 @@ class Routes extends Component {
   render() {
     return (
       <Router
-        navigationBarStyle={{ backgroundColor: '#FFF', height: 75 }}
-        titleStyle={{ color: '#519668', fontSize: 22 }}>
+        navigationBarStyle={{ backgroundColor: '#62c46a', height: 75 }}
+        titleStyle={{ color: '#FFF', fontSize: 22 }}>
         <Scene key="root">
           <Scene
             key="LoginScreenContainer"
@@ -41,21 +41,19 @@ class Routes extends Component {
             component={AddRouteScreen}
             title="Add Route"
           />
-          <Scene key="Registration" component={Registration} />
+          <Scene
+            key="Registration"
+            title="Registration"
+            component={Registration}
+          />
           <Scene
             key="MainContainer"
             component={MainContainer}
-            type={ActionConst.RESET}
             initial={this.state.redirectToMain}
-            back={LoginScreenContainer}
+            title="Walk App"
           />
 
-          <Scene
-            key="ShowRoutes"
-            component={ShowRoutes}
-            hideNavBar={true}
-            title="ShowRoutes"
-          />
+          <Scene key="ShowRoutes" component={ShowRoutes} title="Show Routes" />
         </Scene>
       </Router>
     );

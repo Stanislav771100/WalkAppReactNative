@@ -1,5 +1,5 @@
 export default class LoadScreen {
   static load(cb) {
-    setTimeout(cb, 1000);
+    setTimeout(cb, 2000);
   }
 }
