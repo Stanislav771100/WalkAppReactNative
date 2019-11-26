@@ -1,12 +1,12 @@
-import { Container, Header, Tab, Tabs, TabHeading, Footer } from 'native-base';
-import { StyleSheet } from 'react-native';
-import LoginScreen from '../components/LoginScreen/LoginScreen';
+/* eslint-disable react/no-did-mount-set-state */
+/* eslint-disable react-native/no-inline-styles */
 import Registration from '../components/RegistrationScreen/Registration';
 import MainContainer from '../components/MainContainer';
-import { Router, Scene, ActionConst } from 'react-native-router-flux';
+import { Router, Scene } from 'react-native-router-flux';
 import LoginScreenContainer from '../components/LoginScreen/LoginScreenContainer';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { StyleSheet } from 'react-native';
 import AddRouteScreen from '../components/AddRouteScreen/AddRouteScreen';
 import ShowRoutes from '../components/ShowRoutesScreen/ShowRoutes';
 class Routes extends Component {
@@ -42,6 +42,7 @@ class Routes extends Component {
             renderBackButton={() => null}
             renderLeftButton={() => null}
             title="Add Route"
+            back={false}
           />
           <Scene
             key="Registration"
@@ -55,6 +56,7 @@ class Routes extends Component {
             component={MainContainer}
             initial={this.state.redirectToMain}
             title="Walk App"
+            tabBarStyle={styles.tabBarStyle}
           />
 
           <Scene
@@ -63,12 +65,20 @@ class Routes extends Component {
             renderLeftButton={() => null}
             component={ShowRoutes}
             title="Show Routes"
+            back={false}
           />
         </Scene>
       </Router>
     );
   }
 }
+const styles = StyleSheet.create({
+  tabStyle: {
+    borderRightWidth: 1,
+    borderColor: '#b7b7b7'
+    // backgroundColor:'pink'
+  }
+});
 function mapStateToProps(state) {
   return {
     api: state

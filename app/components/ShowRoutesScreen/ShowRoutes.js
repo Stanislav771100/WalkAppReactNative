@@ -1,4 +1,6 @@
-import React, { PropTypes, Component } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-undef */
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -47,13 +49,10 @@ class ShowRoutes extends Component {
         routes: newRoutes,
         defaultRoutes: newRoutes
       });
-
-      console.log(this.state.routes.coordinates.concat());
     });
   }
 
   deleteRoute = () => {
-    console.log(this.state.routes);
     API.delete(
       {
         routes: this.state.routes
@@ -64,12 +63,9 @@ class ShowRoutes extends Component {
     )
       .then(res => {
         const routes = res.data.walks;
-        console.log(res.data.walks, 'fwefwef');
         this.setState(routes);
       })
-      .catch(error => {
-        console.dir(error);
-      });
+      .catch(error => {});
   };
   async getDirections(startLoc, destinationLoc) {
     try {
@@ -77,7 +73,6 @@ class ShowRoutes extends Component {
         `https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&mode=${'DRIVING'}&key=AIzaSyByQD8cPv4oAcyCvuvLPIYM5K`
       );
       let respJson = await resp.json();
-      // eslint-disable-next-line no-undef
       let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
       let coords = points.map((point, index) => {
         return {
@@ -92,7 +87,6 @@ class ShowRoutes extends Component {
     }
   }
   showAddWalk = () => {
-    console.log(this.state.routes);
     let newRoutes = this.state.defaultRoutes;
     let filerRoutes = newRoutes.filter(item => item.type === 'Walk');
 

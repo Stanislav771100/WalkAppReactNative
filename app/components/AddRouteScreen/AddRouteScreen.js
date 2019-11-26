@@ -1,4 +1,6 @@
-import React, { PropTypes, Component } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-undef */
+import React, { Component } from 'react';
 import { StyleSheet, ImageBackground, TextInput, Button } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { View } from 'native-base';
@@ -71,7 +73,7 @@ class AddRouteScreen extends Component {
               />
 
               <View style={styles.buttonContainerSingUp}>
-                {Platform.OS == 'ios' ? (
+                {Platform.OS === 'ios' ? (
                   <Button
                     onPress={this.addRoute}
                     title="Add Route"

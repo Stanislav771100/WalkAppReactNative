@@ -1,9 +1,10 @@
-import React, { PropTypes, Component } from 'react';
+/* eslint-disable no-undef */
+/* eslint-disable react-native/no-inline-styles */
+import React, { Component } from 'react';
 import { Text, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
-import { Icon } from 'react-native-elements';
 import LoadScreen from '../../services/LoadScreen';
 
 export default class LoginScreen extends Component {
@@ -121,9 +122,6 @@ export default class LoginScreen extends Component {
                     </View>
                   </>
                 )}
-
-                {/* {this.state.login.length  && ( */}
-                {/* )} */}
                 <TextInput
                   style={styles.inputStyle}
                   placeholder="Enter your password"
@@ -145,7 +143,7 @@ export default class LoginScreen extends Component {
                   )}
 
                 <View style={styles.buttonContainerSingIn}>
-                  {Platform.OS == 'ios' ? (
+                  {Platform.OS === 'ios' ? (
                     <Button
                       onPress={this.singIn}
                       title="Sing In"
@@ -156,7 +154,7 @@ export default class LoginScreen extends Component {
                   )}
                 </View>
                 <View style={styles.buttonContainerSingUp}>
-                  {Platform.OS == 'ios' ? (
+                  {Platform.OS === 'ios' ? (
                     <Button
                       onPress={onPressNext}
                       title="Sing Up"

@@ -1,7 +1,9 @@
-import React, { PropTypes, Component } from 'react';
+/* eslint-disable no-shadow */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-undef */
+import React, { Component } from 'react';
 import {
   StyleSheet,
-  ImageBackground,
   Dimensions,
   Text,
   Image,
@@ -11,14 +13,10 @@ import {
 } from 'react-native';
 import { View } from 'native-base';
 import ImagePicker from 'react-native-image-picker';
-import {
-  TextField,
-  FilledTextField,
-  OutlinedTextField
-} from 'react-native-material-textfield';
+import { TextField } from 'react-native-material-textfield';
 import { connect } from 'react-redux';
 import API from '../../services/api';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 49.437891;
@@ -123,7 +121,6 @@ class Profile extends Component {
         this.props.user.id,
         { 'x-api-key': this.props.user.api }
       ).then(res => {
-        const { firstName, lastName, email } = this.state;
         this.props.changeStateProp('data', res.data.user, 'main');
         this.setState({
           isEdit: false,
@@ -185,7 +182,7 @@ class Profile extends Component {
             </View>
             <View style={styles.profileEdit}>
               <View style={styles.buttonContainerEditProfile}>
-                {Platform.OS == 'ios' ? (
+                {Platform.OS === 'ios' ? (
                   <Button
                     onPress={this.editProfile}
                     title={editProfileTitle}
@@ -206,7 +203,7 @@ class Profile extends Component {
                         <Text style={styles.titleStyle}>{route.title}</Text>
                         <View style={styles.buttonsContainer}>
                           <View style={styles.buttonContainerSingIn}>
-                            {Platform.OS == 'ios' ? (
+                            {Platform.OS === 'ios' ? (
                               <Button
                                 onPress={this.singIn}
                                 title="Edit"
@@ -217,7 +214,7 @@ class Profile extends Component {
                             )}
                           </View>
                           <View style={styles.buttonContainerSingIn}>
-                            {Platform.OS == 'ios' ? (
+                            {Platform.OS === 'ios' ? (
                               <Button
                                 onPress={this.deleteRoute}
                                 title="Delete"

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -10,17 +12,14 @@ import {
   ImageBackground,
   Button
 } from 'react-native';
-
 import { Actions } from 'react-native-router-flux';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 49.437891;
 const LONGITUDE = 32.060033;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
 import Polyline from '@mapbox/polyline';
 import LoadScreen from '../../services/LoadScreen';
 
@@ -97,8 +96,6 @@ export default class Main extends Component {
   };
 
   render() {
-    const origin = { latitude: 49.437891, longitude: 32.060033 };
-    const destination = { latitude: 49.441298, longitude: 32.064704 };
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     const onPressNext = () => {
       Actions.AddRouteScreen({
@@ -200,7 +197,7 @@ export default class Main extends Component {
               </MapView>
               {(showAddWalk || showAddBicycle || showAddCar) && (
                 <View style={styles.addRouteButton}>
-                  {Platform.OS == 'ios' ? (
+                  {Platform.OS === 'ios' ? (
                     <Button
                       onPress={onPressNext}
                       title="Add Route"
