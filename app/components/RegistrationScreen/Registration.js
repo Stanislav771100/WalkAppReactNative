@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Text, View } from 'native-base';
 import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 export default class Registration extends Component {
   constructor(props) {
@@ -53,7 +54,9 @@ export default class Registration extends Component {
       lastName: this.state.lastname,
       firstName: this.state.firstname
     })
-      .then(response => {})
+      .then(response => {
+        Actions.LoginScreenContainer();
+      })
       .catch(error => {
         console.dir(error);
       });

@@ -39,12 +39,16 @@ class Routes extends Component {
           <Scene
             key="AddRouteScreen"
             component={AddRouteScreen}
+            renderBackButton={() => null}
+            renderLeftButton={() => null}
             title="Add Route"
           />
           <Scene
             key="Registration"
             title="Registration"
             component={Registration}
+            renderBackButton={() => null}
+            renderLeftButton={() => null}
           />
           <Scene
             key="MainContainer"
@@ -53,7 +57,13 @@ class Routes extends Component {
             title="Walk App"
           />
 
-          <Scene key="ShowRoutes" component={ShowRoutes} title="Show Routes" />
+          <Scene
+            key="ShowRoutes"
+            renderBackButton={() => null}
+            renderLeftButton={() => null}
+            component={ShowRoutes}
+            title="Show Routes"
+          />
         </Scene>
       </Router>
     );

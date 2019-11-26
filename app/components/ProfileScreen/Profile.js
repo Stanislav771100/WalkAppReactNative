@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     width: '50%'
   },
   backgroundColor: {
-    backgroundColor: '#f0f0f0'
+    backgroundColor: '#DDD'
   },
   profileEdit: {
     width: '100%',
@@ -331,7 +331,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600'
   },
-  titleStyle: {},
+  titleStyle: {
+    textAlign: 'center'
+  },
   textContainers: {
     display: 'flex',
     alignItems: 'center',

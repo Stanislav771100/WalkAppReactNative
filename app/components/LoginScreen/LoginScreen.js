@@ -9,7 +9,6 @@ import LoadScreen from '../../services/LoadScreen';
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    
     this.state = {
       projects: [],
       issues: [],
@@ -189,9 +188,9 @@ const styles = StyleSheet.create({
     marginTop: -5
   },
   buttonContainerSingUp: {
-    height: 40,
-    width: '50%',
-
+    height: 50,
+    width: '60%',
+    padding: 5,
     borderRadius: 5,
     marginTop: 20,
     ...Platform.select({
@@ -202,12 +201,12 @@ const styles = StyleSheet.create({
     })
   },
   buttonContainerSingIn: {
-    height: 40,
-    width: '50%',
+    height: 50,
+    width: '60%',
     borderColor: '#FFF',
     borderRadius: 5,
-    marginTop: 20,
-
+    marginTop: 60,
+    padding: 5,
     ...Platform.select({
       ios: {
         backgroundColor: '#519668'
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
     })
   },
   inputStyle: {
-    height: 50,
+    height: 60,
     width: '80%',
     borderColor: '#FFF',
     borderStyle: 'solid',
@@ -224,10 +223,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     marginTop: 30,
-    backgroundColor: 'rgba(255,255,255,0.8)'
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    fontSize: 16
   },
   content: {
-    height: '80%',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
