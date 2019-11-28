@@ -1,26 +1,29 @@
-import React, { PropTypes, Component } from 'react';
-import {
-  StyleSheet,
-  ImageBackground,
-  Text,
-  TextInput,
-  Button
-} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-undef */
+import React, { Component } from 'react';
+import { StyleSheet, ImageBackground, TextInput, Button } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { View } from 'native-base';
 import API from '../../services/api';
-import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
+import LoadScreen from '../../services/LoadScreen';
 
-class AddRouteScreen extends React.Component {
+class AddRouteScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
       description: '',
       coordinates: [],
-      type: ''
+      type: '',
+      loaded: this.props.loaded
     };
   }
+  componentDidMount() {
+    LoadScreen.load(b => this.setState({ loaded: true }));
+  }
+
   addRoute = () => {
     API.postRoutes(
       {
@@ -32,40 +35,58 @@ class AddRouteScreen extends React.Component {
         'x-api-key': this.props.user.api
       }
     ).then(response => {
-      console.log(response, 'res');
+      Actions.MainContainer({ loaded: true });
     });
   };
   render() {
     console.log(this.props.coordinates, this.props.user.api);
     return (
-      <ImageBackground
-        source={require('../../assets/images/rental-car-solar-eclipse-HERTZCANCEL0817.jpg')}
-        style={{ width: '100%', height: '100%' }}>
-        <View style={styles.main}>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Title"
-            onChangeText={type => this.setState({ type })}
-            value={this.props.typeRoute}
+      <>
+        {this.state.loaded === false ? (
+          <ImageBackground
+            source={require('../../assets/images/walk-cycle-15.gif')}
+            style={{ width: '100%', height: '100%' }}
           />
-          <TextInput
-            style={styles.inputStyleDescription}
-            placeholder="Description"
-            onChangeText={description => this.setState({ description })}
-            value={this.state.description}
-            multiline
-            secureTextEntry={true}
-          />
+        ) : (
+          <ImageBackground
+            source={require('../../assets/images/rental-car-solar-eclipse-HERTZCANCEL0817.jpg')}
+            style={{ width: '100%', height: '100%' }}>
+            <Spinner
+              visible={this.state.spinner}
+              textContent={'Loading...'}
+              textStyle={styles.spinnerTextStyle}
+            />
+            <View style={styles.main}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Title"
+                onChangeText={type => this.setState({ type })}
+                value={this.props.typeRoute}
+              />
+              <TextInput
+                style={styles.inputStyleDescription}
+                placeholder="Description"
+                onChangeText={description => this.setState({ description })}
+                value={this.state.description}
+                multiline
+                secureTextEntry={true}
+              />
 
-          <View style={styles.buttonContainerSingUp}>
-            {Platform.OS == 'ios' ? (
-              <Button onPress={this.addRoute} title="Add Route" color="#FFF" />
-            ) : (
-              <Button onPress={this.addRoute} title="Add Route" />
-            )}
-          </View>
-        </View>
-      </ImageBackground>
+              <View style={styles.buttonContainerSingUp}>
+                {Platform.OS === 'ios' ? (
+                  <Button
+                    onPress={this.addRoute}
+                    title="Add Route"
+                    color="#FFF"
+                  />
+                ) : (
+                  <Button onPress={this.addRoute} title="Add Route" />
+                )}
+              </View>
+            </View>
+          </ImageBackground>
+        )}
+      </>
     );
   }
 }
@@ -78,7 +99,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     ...Platform.select({
       ios: {
-        backgroundColor: '#519668'
+        backgroundColor: '#949494'
       },
       android: {}
     })

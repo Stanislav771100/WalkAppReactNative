@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -7,21 +9,21 @@ import {
   View,
   TouchableOpacity,
   Image,
+  ImageBackground,
   Button
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 49.437891;
 const LONGITUDE = 32.060033;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const GOOGLE_MAPS_APIKEY = 'AIzaSyByQD8cPv4oAcyCvuvLPIYM5K-gjxhHX0A';
 import Polyline from '@mapbox/polyline';
+import LoadScreen from '../../services/LoadScreen';
 
-export default class Main extends React.Component {
+export default class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -31,7 +33,9 @@ export default class Main extends React.Component {
       showAddBicycle: false,
       showAddCar: false,
       title: '',
-      typeRoute: ''
+      typeRoute: '',
+      spinner: false,
+      loaded: false
     };
 
     this.mapView = null;
@@ -63,6 +67,7 @@ export default class Main extends React.Component {
     });
   };
   componentDidMount() {
+    LoadScreen.load(b => this.setState({ loaded: true }));
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
   }
   async getDirections(startLoc, destinationLoc) {
@@ -84,101 +89,130 @@ export default class Main extends React.Component {
       return error;
     }
   }
+  backButton = () => {
+    this.setState({
+      coordinates: this.state.coordinates.slice(0, -1)
+    });
+  };
+
   render() {
-    const origin = { latitude: 49.437891, longitude: 32.060033 };
-    const destination = { latitude: 49.441298, longitude: 32.064704 };
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     const onPressNext = () => {
       Actions.AddRouteScreen({
         coordinates: this.state.coordinates,
         title: this.state.title,
-        typeRoute: this.state.typeRoute
+        typeRoute: this.state.typeRoute,
+        loaded: false
       });
     };
     return (
-      <View style={{ flex: 1 }}>
-        <View style={styles.buttonMain}>
-          {showAddBicycle === false && showAddCar === false && (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.showAddWalk}>
-                <Image
-                  source={require('../../assets/images/sneaker.png')}
-                  style={styles.ImageIconStyle}
-                />
-                <Text style={{ textAlign: 'center', color: '#FFF' }}>Walk</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {showAddWalk === false && showAddCar === false && (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.showAddBicycle}>
-                <Image
-                  source={require('../../assets/images/bike-of-a-gymnast.png')}
-                  style={styles.ImageIconStyle}
-                />
-                <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                  Bicycle
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {showAddWalk === false && showAddBicycle === false && (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={this.showAddCar}>
-                <Image
-                  source={require('../../assets/images/steering-wheel.png')}
-                  style={styles.ImageIconStyle}
-                />
-                <Text style={{ textAlign: 'center', color: '#FFF' }}>Car</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-        <View style={styles.container}>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            initialRegion={{
-              latitude: LATITUDE,
-              longitude: LONGITUDE,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA
-            }}
-            onPress={this.onMapPress}
-            ref={c => (this.mapView = c)}>
-            {this.state.coordinates.map((coordinate, index) => (
-              <MapView.Marker
-                key={`coordinate_${index}`}
-                coordinate={coordinate}
-              />
-            ))}
-            <MapView.Polyline
-              googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-              coordinates={this.state.coordinates}
-              strokeWidth={2}
-              strokeColor="red"
-            />
-          </MapView>
-          {(showAddWalk || showAddBicycle || showAddCar) && (
-            <View style={styles.addRouteButton}>
-              {Platform.OS == 'ios' ? (
-                <Button
-                  onPress={onPressNext}
-                  title="Add Route"
-                  color="#FFF"
-                  heigh="100"
-                />
-              ) : (
-                <Button onPress={onPressNext} title="Add Route" />
+      <>
+        {this.state.loaded === false ? (
+          <ImageBackground
+            source={require('../../assets/images/diogo_leaseplan.gif')}
+            style={{ width: '100%', height: '100%' }}
+          />
+        ) : (
+          <View style={{ flex: 1 }}>
+            <View style={styles.buttonMain}>
+              {showAddBicycle === false && showAddCar === false && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={this.showAddWalk}>
+                    <Image
+                      source={require('../../assets/images/sneaker.png')}
+                      style={styles.ImageIconStyle}
+                    />
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                      Walk
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              {showAddWalk === false && showAddCar === false && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={this.showAddBicycle}>
+                    <Image
+                      source={require('../../assets/images/bike-of-a-gymnast.png')}
+                      style={styles.ImageIconStyle}
+                    />
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                      Bicycle
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              {showAddWalk === false && showAddBicycle === false && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={this.showAddCar}>
+                    <Image
+                      source={require('../../assets/images/steering-wheel.png')}
+                      style={styles.ImageIconStyle}
+                    />
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                      Car
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
-          )}
-        </View>
-      </View>
+
+            <View style={styles.container}>
+              <TouchableOpacity
+                onPress={this.backButton}
+                style={styles.backButton}>
+                <Image
+                  source={require('../../assets/images/1111.png')}
+                  style={styles.ImageIconStyle}
+                />
+              </TouchableOpacity>
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={styles.map}
+                initialRegion={{
+                  latitude: LATITUDE,
+                  longitude: LONGITUDE,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitudeDelta: LONGITUDE_DELTA
+                }}
+                onPress={this.onMapPress}
+                ref={c => (this.mapView = c)}>
+                {this.state.coordinates.map((coordinate, index) => (
+                  <MapView.Marker
+                    key={`coordinate_${index}`}
+                    coordinate={coordinate}
+                  />
+                ))}
+                <MapView.Polyline
+                  googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                  coordinates={this.state.coordinates}
+                  strokeWidth={2}
+                  strokeColor="red"
+                />
+              </MapView>
+              {(showAddWalk || showAddBicycle || showAddCar) && (
+                <View style={styles.addRouteButton}>
+                  {Platform.OS === 'ios' ? (
+                    <Button
+                      onPress={onPressNext}
+                      title="Add Route"
+                      color="#FFF"
+                      heigh="100"
+                    />
+                  ) : (
+                    <Button onPress={onPressNext} title="Add Route" />
+                  )}
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+      </>
     );
   }
 }
@@ -188,18 +222,30 @@ Main.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    position: 'absolute',
+    backgroundColor: '#363636',
+    zIndex: 1000
+  },
   addRouteButton: {
     flex: 1,
     width: '100%',
     height: 50,
     position: 'absolute',
-    zIndex: 999,
-    backgroundColor: '#35523e'
+    zIndex: 1001,
+    backgroundColor: '#292929'
   },
   buttonMain: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#519668',
+    backgroundColor: '#292929',
     height: 100,
     justifyContent: 'space-around',
     alignItems: 'center'

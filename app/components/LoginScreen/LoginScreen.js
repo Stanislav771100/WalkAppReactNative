@@ -1,11 +1,12 @@
+/* eslint-disable no-undef */
 /* eslint-disable react-native/no-inline-styles */
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { Text, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
-import { Icon } from 'react-native-elements';
-
+import LoadScreen from '../../services/LoadScreen';
+import InfiniteScrollView from 'react-native-infinite-scroll-view';
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +24,13 @@ export default class LoginScreen extends Component {
       textEmailError: '',
       emailValid: false,
       passwordValid: false,
-      emailValidServer: false
+      emailValidServer: false,
+      id: '',
+      loaded: false
     };
+  }
+  componentDidMount() {
+    LoadScreen.load(b => this.setState({ loaded: true }));
   }
   singIn = () => {
     API.postLogin({
@@ -36,30 +42,23 @@ export default class LoginScreen extends Component {
           api: response.data.user.apiKey,
           firstName: response.data.user.firstName,
           lastName: response.data.user.lastName,
-          email: response.data.user.email
+          email: response.data.user.email,
+          id: response.data.user._id
         });
 
-        let api = this.state.api;
-        let firstName = this.state.firstName;
-        let lastName = this.state.lastName;
-        let email = this.state.email;
+        const { api, firstName, lastName, email, id } = this.state;
         this.props.changeStateProp(
           'data',
-          { api, firstName, lastName, email },
+          { api, firstName, lastName, email, id },
           'user'
         );
         Actions.MainContainer();
       })
       .catch(error => {
-        this.setState(
-          {
-            textEmailError: error.response.data.message,
-            emailValidServer: !this.state.emailValidServer
-          },
-          () => {
-            console.log(this.state.textEmailError);
-          }
-        );
+        this.setState({
+          textEmailError: error.response.data.message,
+          emailValidServer: !this.state.emailValidServer
+        });
       });
   };
   varifyEmail = () => {
@@ -84,77 +83,93 @@ export default class LoginScreen extends Component {
     };
 
     return (
-      <View style={styles.main}>
-        <ImageBackground
-          source={require('../../assets/images/314622.jpg')}
-          style={{ width: '100%', height: '100%' }}>
-          <View style={styles.content}>
-            <TextInput
-              autoCapitalize={false}
-              style={styles.inputStyle}
-              onEndEditing={this.varifyEmail}
-              placeholder="Enter your email"
-              onChangeText={login => this.setState({ login })}
-              value={this.state.login}
-            />
-            {this.state.login.length > 0 && this.state.emailValid === false && (
-              <>
-                <View style={styles.errorEmail}>
-                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                    Email must contain '@' and '.'
-                  </Text>
-                </View>
-              </>
-            )}
-            {this.state.login.length > 0 && this.state.emailValidServer && (
-              <>
-                <View style={styles.errorEmail}>
-                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                    {this.state.textEmailError}
-                  </Text>
-                </View>
-              </>
-            )}
+      <>
+        {this.state.loaded === false ? (
+          <ImageBackground
+            source={require('../../assets/images/walk-cycle-15.gif')}
+            style={{ width: '100%', height: '100%' }}
+          />
+        ) : (
+          <View style={styles.main}>
+            <ImageBackground
+              source={require('../../assets/images/314622.jpg')}
+              style={{ width: '100%', height: '100%' }}>
+              <View style={styles.content}>
+                <TextInput
+                  autoCapitalize={false}
+                  style={styles.inputStyle}
+                  onEndEditing={this.varifyEmail}
+                  placeholder="Enter your email"
+                  onChangeText={login => this.setState({ login })}
+                  value={this.state.login}
+                />
+                {this.state.login.length > 0 &&
+                  this.state.emailValid === false && (
+                    <>
+                      <View style={styles.errorEmail}>
+                        <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                          Email must contain '@' and '.'
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                {this.state.login.length > 0 && this.state.emailValidServer && (
+                  <>
+                    <View style={styles.errorEmail}>
+                      <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                        {this.state.textEmailError}
+                      </Text>
+                    </View>
+                  </>
+                )}
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Enter your password"
+                  onChangeText={password => this.setState({ password })}
+                  value={this.state.password}
+                  autoCapitalize={false}
+                  onEndEditing={this.varifyPassword}
+                  secureTextEntry={true}
+                />
+                {this.state.password.length > 0 &&
+                  this.state.passwordValid === false && (
+                    <>
+                      <View style={styles.errorPassword}>
+                        <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                          Password must be at least 8 characters and must
+                          contain uppercase, numbers
+                        </Text>
+                      </View>
+                    </>
+                  )}
 
-            {/* {this.state.login.length  && ( */}
-            {/* )} */}
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your password"
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-              autoCapitalize={false}
-              secureTextEntry={true}
-            />
-            {this.state.password.length > 0 &&
-              this.state.passwordValid === false && (
-                <>
-                  <View style={styles.errorPassword}>
-                    <Text style={{ textAlign: 'center', color: '#FFF' }}>
-                      Password must be at least 8 characters and must contain
-                      uppercase, numbers
-                    </Text>
-                  </View>
-                </>
-              )}
-
-            <View style={styles.buttonContainerSingIn}>
-              {Platform.OS == 'ios' ? (
-                <Button onPress={this.singIn} title="Sing In" color="#FFF" />
-              ) : (
-                <Button onPress={this.singIn} title="Sing In" />
-              )}
-            </View>
-            <View style={styles.buttonContainerSingUp}>
-              {Platform.OS == 'ios' ? (
-                <Button onPress={onPressNext} title="Sing Up" color="#FFF" />
-              ) : (
-                <Button onPress={onPressNext} title="Sing Up" />
-              )}
-            </View>
+                <View style={styles.buttonContainerSingIn}>
+                  {Platform.OS === 'ios' ? (
+                    <Button
+                      onPress={this.singIn}
+                      title="Sing In"
+                      color="#FFF"
+                    />
+                  ) : (
+                    <Button onPress={this.singIn} title="Sing In" />
+                  )}
+                </View>
+                <View style={styles.buttonContainerSingUp}>
+                  {Platform.OS === 'ios' ? (
+                    <Button
+                      onPress={onPressNext}
+                      title="Sing Up"
+                      color="#FFF"
+                    />
+                  ) : (
+                    <Button onPress={onPressNext} title="Sing Up" />
+                  )}
+                </View>
+              </View>
+            </ImageBackground>
           </View>
-        </ImageBackground>
-      </View>
+        )}
+      </>
     );
   }
 }
@@ -172,9 +187,9 @@ const styles = StyleSheet.create({
     marginTop: -5
   },
   buttonContainerSingUp: {
-    height: 40,
-    width: '50%',
-
+    height: 50,
+    width: '60%',
+    padding: 5,
     borderRadius: 5,
     marginTop: 20,
     ...Platform.select({
@@ -185,12 +200,12 @@ const styles = StyleSheet.create({
     })
   },
   buttonContainerSingIn: {
-    height: 40,
-    width: '50%',
+    height: 50,
+    width: '60%',
     borderColor: '#FFF',
     borderRadius: 5,
-    marginTop: 20,
-
+    marginTop: 60,
+    padding: 5,
     ...Platform.select({
       ios: {
         backgroundColor: '#519668'
@@ -199,7 +214,7 @@ const styles = StyleSheet.create({
     })
   },
   inputStyle: {
-    height: 50,
+    height: 60,
     width: '80%',
     borderColor: '#FFF',
     borderStyle: 'solid',
@@ -207,10 +222,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     marginTop: 30,
-    backgroundColor: 'rgba(255,255,255,0.8)'
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    fontSize: 16
   },
   content: {
-    height: '80%',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

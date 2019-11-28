@@ -1,12 +1,5 @@
 import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:3006';
-export function getProjects() {
-  return axios.get('/login.json', {
-    headers: {
-      'X-Redmine-API-Key': '2fda745bb4cdd835fdf41ec1fab82a13ddc1a54c'
-    }
-  });
-}
 
 class API {
   static postLogin(data) {
@@ -29,16 +22,11 @@ class API {
       console.dir(error);
     });
   }
-  static getUser(data) {
-    return axios({
-      method: 'post',
-      url: '/users',
-
-      data: {
-        user: data
-      }
-    }).catch(error => {
-      console.dir(error);
+  static getUser(headers, params) {
+    return axios('/users', {
+      method: 'get',
+      headers,
+      params
     });
   }
   static postRoutes(data, headers) {
@@ -53,11 +41,31 @@ class API {
       console.dir(error);
     });
   }
-  static getRoutes(headers) {
+  static getRoutes(headers, data) {
     return axios({
       method: 'get',
       url: '/walks',
-      headers
+      headers,
+      params: data
+    }).catch(error => {
+      console.dir(error);
+    });
+  }
+  static updateUser(user, id, headers) {
+    return axios(`/users/${id}`, {
+      method: 'put',
+      headers,
+      data: { user }
+    });
+  }
+  static getRoutesUser(headers, id) {
+    return axios({
+      method: 'get',
+      url: '/walks',
+      headers,
+      params: {
+        filter: id || {}
+      }
     }).catch(error => {
       console.dir(error);
     });
@@ -66,10 +74,11 @@ class API {
     return axios({
       method: 'delete',
       url: '/walks',
-      headers,
+
       data: {
         walk: data
-      }
+      },
+      headers
     });
   }
 }

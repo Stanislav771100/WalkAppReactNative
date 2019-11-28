@@ -1,16 +1,22 @@
-import React, { PropTypes, Component } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-undef */
+import React, { Component } from 'react';
 import {
   StyleSheet,
-  ImageBackground,
   Dimensions,
   Text,
-  Button,
-  ScrollView
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Picker,
+  RefreshControl,
+  ListView
 } from 'react-native';
 import { View } from 'native-base';
 import { connect } from 'react-redux';
+import RNPickerSelect from 'react-native-picker-select';
 import API from '../../services/api';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -18,7 +24,7 @@ const LATITUDE = 49.437891;
 const LONGITUDE = 32.060033;
 const LATITUDE_DELTA = 0.0722;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-class ShowRoutes extends React.Component {
+class ShowRoutes extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,20 +35,30 @@ class ShowRoutes extends React.Component {
       password: '',
       api: '',
       coordinates: [],
-      routes: []
+      routes: [],
+      newRoutes: [],
+      defaultRoutes: [],
+      showAddWalk: false,
+      showAddBicycle: false,
+      showAddCar: false,
+      page: 1,
+      limit: 10,
+      hasMore: true,
+      createBy: []
     };
   }
+
   componentDidMount() {
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
-    console.log(this.props, 'f');
+
     API.getRoutes({
       'x-api-key': this.props.user.api
     }).then(res => {
       let newRoutes = this.state.routes.concat(res.data.walks);
       this.setState({
-        routes: newRoutes
+        routes: newRoutes,
+        defaultRoutes: newRoutes
       });
-      console.log(this.state.routes.coordinates.concat());
     });
   }
 
@@ -57,13 +73,11 @@ class ShowRoutes extends React.Component {
     )
       .then(res => {
         const routes = res.data.walks;
-        console.log(res.data.walks, 'fwefwef');
         this.setState(routes);
       })
-      .catch(error => {
-        console.dir(error);
-      });
+      .catch(error => {});
   };
+
   async getDirections(startLoc, destinationLoc) {
     try {
       let resp = await fetch(
@@ -83,11 +97,118 @@ class ShowRoutes extends React.Component {
       return error;
     }
   }
-  render() {
-    console.log(this.props, '1111111');
+  showAddWalk = () => {
+    let newRoutes = this.state.defaultRoutes;
+    let filerRoutes = newRoutes.filter(item => item.type === 'Walk');
+
+    this.setState({
+      routes: filerRoutes
+    });
+  };
+  showAddBicycle = () => {
+    let newRoutes = this.state.defaultRoutes;
+    let filerRoutes = newRoutes.filter(item => item.type === 'Bicycle');
+
+    this.setState({
+      routes: filerRoutes
+    });
+  };
+  showAddCar = () => {
+    let newRoutes = this.state.defaultRoutes;
+    let filerRoutes = newRoutes.filter(item => item.type === 'Car');
+
+    this.setState({
+      routes: filerRoutes
+    });
+  };
+  fetchMoreData = () => {
+    const { page, limit } = this.state;
+    API.getRoutes(
+      { 'x-api-key': this.props.user.api },
+      {
+        page: page + 1,
+        limit: limit
+      }
+    ).then(res => {
+      if (res) {
+        let newRoutes = this.state.routes.concat(res.data.walks);
+        let totalPages = res.config.headers['x-total-pages'];
+        this.setState({
+          routes: newRoutes,
+          page: this.state.page + 1,
+          hasMore: parseInt(this.state.page + 1, 10) <= totalPages
+        });
+      } else {
+        this.setState({
+          fetching: false,
+          page: this.state.page - 1
+        });
+      }
+    });
+  };
+  isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
     return (
-      <View style={{ backgroundColor: '#203326' }}>
-        <ScrollView>
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 50
+    );
+  }
+
+  render() {
+    const { showAddBicycle, showAddCar, showAddWalk } = this.state;
+    return (
+      <View style={{ backgroundColor: '#DDD' }}>
+        <ScrollView
+          onScroll={({ nativeEvent }) => {
+            if (this.isCloseToBottom(nativeEvent) && this.state.hasMore) {
+              this.fetchMoreData();
+            }
+          }}>
+          <View style={styles.buttonMain}>
+            {showAddBicycle === false && showAddCar === false && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.showAddWalk}>
+                  <Image
+                    source={require('../../assets/images/sneaker.png')}
+                    style={styles.ImageIconStyle}
+                  />
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Walk
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {showAddWalk === false && showAddCar === false && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.showAddBicycle}>
+                  <Image
+                    source={require('../../assets/images/bike-of-a-gymnast.png')}
+                    style={styles.ImageIconStyle}
+                  />
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Bicycle
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {showAddWalk === false && showAddBicycle === false && (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.showAddCar}>
+                  <Image
+                    source={require('../../assets/images/steering-wheel.png')}
+                    style={styles.ImageIconStyle}
+                  />
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>
+                    Car
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
           <View style={styles.containerRoutes}>
             <View>
               {this.state.routes.map((route, i) => {
@@ -96,30 +217,6 @@ class ShowRoutes extends React.Component {
                     <View style={styles.textContainers}>
                       <Text style={styles.typeStyle}>{route.type}</Text>
                       <Text style={styles.titleStyle}>{route.title}</Text>
-                      <View style={styles.buttonsContainer}>
-                        <View style={styles.buttonContainerSingIn}>
-                          {Platform.OS == 'ios' ? (
-                            <Button
-                              onPress={this.singIn}
-                              title="Edit"
-                              color="#FFF"
-                            />
-                          ) : (
-                            <Button onPress={this.singIn} title="Edit" />
-                          )}
-                        </View>
-                        <View style={styles.buttonContainerSingIn}>
-                          {Platform.OS == 'ios' ? (
-                            <Button
-                              onPress={this.deleteRoute}
-                              title="Delete"
-                              color="#FFF"
-                            />
-                          ) : (
-                            <Button onPress={this.deleteRoute} title="Delete" />
-                          )}
-                        </View>
-                      </View>
                     </View>
                     <View style={styles.miniMapContainer}>
                       <MapView
@@ -157,6 +254,27 @@ class ShowRoutes extends React.Component {
   }
 }
 const styles = StyleSheet.create({
+  buttonMain: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: '#292929',
+    height: 100,
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    height: 50,
+    width: 50
+  },
+  ImageIconStyle: {
+    height: 50,
+    width: 50
+  },
   buttonsContainer: {
     display: 'flex',
     width: '90%',
@@ -181,7 +299,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600'
   },
-  titleStyle: {},
+  titleStyle: {
+    textAlign: 'center'
+  },
   textContainers: {
     display: 'flex',
     alignItems: 'center',
@@ -190,7 +310,7 @@ const styles = StyleSheet.create({
   },
   containerRoutes: {
     marginTop: 20,
-    backgroundColor: '#203326',
+    backgroundColor: '#DDD',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'

@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addApi } from '../../actions/api';
 import LoginScreen from './LoginScreen';
 import { changeStateProp } from '../../actions/index';
 
