@@ -7,10 +7,14 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Picker,
+  RefreshControl,
+  ListView
 } from 'react-native';
 import { View } from 'native-base';
 import { connect } from 'react-redux';
+import RNPickerSelect from 'react-native-picker-select';
 import API from '../../services/api';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -32,12 +36,18 @@ class ShowRoutes extends Component {
       api: '',
       coordinates: [],
       routes: [],
+      newRoutes: [],
       defaultRoutes: [],
       showAddWalk: false,
       showAddBicycle: false,
-      showAddCar: false
+      showAddCar: false,
+      page: 1,
+      limit: 10,
+      hasMore: true,
+      createBy: []
     };
   }
+
   componentDidMount() {
     this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
 
@@ -67,6 +77,7 @@ class ShowRoutes extends Component {
       })
       .catch(error => {});
   };
+
   async getDirections(startLoc, destinationLoc) {
     try {
       let resp = await fetch(
@@ -110,11 +121,47 @@ class ShowRoutes extends Component {
       routes: filerRoutes
     });
   };
+  fetchMoreData = () => {
+    const { page, limit } = this.state;
+    API.getRoutes(
+      { 'x-api-key': this.props.user.api },
+      {
+        page: page + 1,
+        limit: limit
+      }
+    ).then(res => {
+      if (res) {
+        let newRoutes = this.state.routes.concat(res.data.walks);
+        let totalPages = res.config.headers['x-total-pages'];
+        this.setState({
+          routes: newRoutes,
+          page: this.state.page + 1,
+          hasMore: parseInt(this.state.page + 1, 10) <= totalPages
+        });
+      } else {
+        this.setState({
+          fetching: false,
+          page: this.state.page - 1
+        });
+      }
+    });
+  };
+  isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+    return (
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 50
+    );
+  }
+
   render() {
     const { showAddBicycle, showAddCar, showAddWalk } = this.state;
     return (
       <View style={{ backgroundColor: '#DDD' }}>
-        <ScrollView>
+        <ScrollView
+          onScroll={({ nativeEvent }) => {
+            if (this.isCloseToBottom(nativeEvent) && this.state.hasMore) {
+              this.fetchMoreData();
+            }
+          }}>
           <View style={styles.buttonMain}>
             {showAddBicycle === false && showAddCar === false && (
               <View style={styles.buttonContainer}>
@@ -162,7 +209,6 @@ class ShowRoutes extends Component {
               </View>
             )}
           </View>
-
           <View style={styles.containerRoutes}>
             <View>
               {this.state.routes.map((route, i) => {

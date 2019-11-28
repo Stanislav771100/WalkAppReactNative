@@ -41,11 +41,12 @@ class API {
       console.dir(error);
     });
   }
-  static getRoutes(headers) {
+  static getRoutes(headers, data) {
     return axios({
       method: 'get',
       url: '/walks',
-      headers
+      headers,
+      params: data
     }).catch(error => {
       console.dir(error);
     });

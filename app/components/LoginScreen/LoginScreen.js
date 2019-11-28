@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import API from '../../services/api';
 import { StyleSheet, Button, TextInput, ImageBackground } from 'react-native';
 import LoadScreen from '../../services/LoadScreen';
-
+import InfiniteScrollView from 'react-native-infinite-scroll-view';
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -128,6 +128,7 @@ export default class LoginScreen extends Component {
                   onChangeText={password => this.setState({ password })}
                   value={this.state.password}
                   autoCapitalize={false}
+                  onEndEditing={this.varifyPassword}
                   secureTextEntry={true}
                 />
                 {this.state.password.length > 0 &&
